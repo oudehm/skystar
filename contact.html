@@ -4,11 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact — Skystar</title>
-<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="shared.css"> <!-- shared colors, fonts, header/footer -->
 <style>
+  /* locks the page to the screen so it doesn't scroll past the footer */
   html, body { height: 100%; overflow: hidden; }
   body { display: flex; flex-direction: column; }
 
+  /* centers the contact card vertically and horizontally */
   main {
     flex: 1;
     overflow-y: auto;
@@ -17,25 +19,37 @@
     align-items: center;
     justify-content: center;
   }
+
+  /* the white/centered container that holds all the contact content */
   .contact-wrap { max-width: 720px; width: 100%; text-align: center; }
   .contact-wrap h1 { font-weight: 300; font-size: 2.6rem; margin-bottom: 18px; letter-spacing: -0.01em; }
+  /* gold shimmer on the italic word in the heading */
   .contact-wrap h1 em { font-style: italic; color: var(--accent); }
+  /* the short intro sentence below the heading */
   .contact-wrap .lead { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 500px; margin: 0 auto 40px; }
 
+  /* 3-column row: Instagram | Email | TikTok */
   .contact-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
+  /* each platform cell */
   .contact-item { padding: 26px 18px; border-right: 1px solid var(--line); text-align: center; }
-  .contact-item:last-child { border-right: none; }
-  .contact-item .label { font-size: 0.7rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
-  .contact-item a { color: var(--ink); text-decoration: none; font-size: 1.05rem; transition: color 0.2s; }
-  .contact-item a:hover { color: var(--accent); }
+  .contact-item:last-child { border-right: none; } /* no right border on the last cell */
 
+  /* the small label above each link (e.g. "Instagram") */
+  .contact-item .label { font-size: 0.7rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+
+  /* the clickable handle/email link */
+  .contact-item a { color: var(--ink); text-decoration: none; font-size: 1.05rem; transition: color 0.2s; }
+  .contact-item a:hover { color: var(--accent); } /* turns gold on hover */
+
+  /* the italic note at the bottom ("in-person only") */
   .order-note { margin-top: 30px; font-size: 0.82rem; color: var(--muted); line-height: 1.7; font-style: italic; }
 
+  /* on mobile, stack the three contact cells vertically instead of side by side */
   @media (max-width: 900px) {
     main { padding: 30px 24px; }
     .contact-wrap h1 { font-size: 1.8rem; }
@@ -47,6 +61,7 @@
 </head>
 <body>
 
+<!-- nav bar -->
 <header>
   <div class="logo-wrap">
     <div class="logo">Skystar</div>
@@ -67,8 +82,10 @@
   <div class="contact-wrap">
     <div class="eyebrow">Get in Touch</div>
     <h1>Let's <em>connect</em></h1>
+    <!-- replace with a real one or two sentence welcome line -->
     <p class="lead">[ A short, polished line — questions, event inquiries, or just to say hi. ]</p>
 
+    <!-- three contact platform cells — update the href and handle text for each -->
     <div class="contact-grid">
       <div class="contact-item">
         <div class="label">Instagram</div>
@@ -84,6 +101,7 @@
       </div>
     </div>
 
+    <!-- reminder that there's no online shop -->
     <p class="order-note"><span class="script">Skystar</span> is in-person only — find us at our upcoming pop-ups.</p>
   </div>
 </main>

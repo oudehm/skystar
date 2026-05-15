@@ -1,39 +1,48 @@
+/* pulls in the "Great Vibes" cursive font from Google */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
+/* ── Global color + font variables ──
+   Change a value here and it updates everywhere on the site */
 :root {
-  --pink: #fad7ea;
-  --pink-soft: #fdf1f4;
-  --green: #ecf7e9;
+  --pink: #fad7ea;          /* bright pink (reserved) */
+  --pink-soft: #fdf1f4;     /* very light pink — main page background */
+  --green: #ecf7e9;         /* soft green — used for splash + header/footer */
   --green-soft: #ecf7e9;
   --green-deep: #ecf7e9;
-  --cream: #fdfaf6;
-  --ink: #344628;
-  --muted: #7a7373;
-  --line: #e8dcd8;
-  --accent: #8a6b50;
-  --script: 'Great Vibes', cursive;
+  --cream: #fdfaf6;         /* off-white — used for cards and photo placeholders */
+  --ink: #344628;           /* dark green — main text color */
+  --muted: #7a7373;         /* grey — secondary/caption text */
+  --line: #e8dcd8;          /* dusty rose — borders and dividers */
+  --accent: #a0687a;        /* dusty rose — used for labels, highlights */
+  /* dusty rose gradient — echoes the flower illustration, soft shimmer on text */
+  --accent-gradient: linear-gradient(135deg, #c4909f 0%, #a0687a 45%, #bf8fa0 80%, #c9a0ae 100%);
+  --script: 'Great Vibes', cursive; /* the fancy cursive font for "Skystar" */
 }
 
+/* removes default spacing and makes sizing predictable on all elements */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* base styles applied to every page */
 body {
   font-family: 'Times New Roman', Times, serif;
   background: var(--pink-soft);
   color: var(--ink);
-  font-weight: 300;
+  font-weight: 300; /* light weight for an editorial feel */
 }
 
-/* ── Header ── */
+/* ── Header (nav bar at the top of every page) ── */
 header {
   background: var(--green-soft);
   padding: 22px 60px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* logo on left, nav on right */
   align-items: center;
   border-bottom: 1px solid var(--line);
-  flex-shrink: 0;
+  flex-shrink: 0; /* prevents header from shrinking on small screens */
 }
+/* stacks the "Skystar" logo and "Handmade · Est. 2026" tagline vertically */
 .logo-wrap { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+/* the big cursive "Skystar" wordmark in the header */
 .logo {
   font-family: var(--script);
   font-weight: 400;
@@ -42,6 +51,7 @@ header {
   color: var(--ink);
   line-height: 1;
 }
+/* the small "Handmade · Est. 2026" text below the logo */
 .tagline {
   font-size: 0.65rem;
   letter-spacing: 0.35em;
@@ -50,7 +60,7 @@ header {
   margin-top: 5px;
 }
 
-/* ── Nav ── */
+/* ── Navigation links ── */
 nav ul { list-style: none; display: flex; gap: 32px; }
 nav a {
   text-decoration: none;
@@ -59,19 +69,19 @@ nav a {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 6px 0;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid transparent; /* invisible underline by default */
   transition: border-color 0.2s;
 }
-nav a:hover { border-color: var(--accent); }
-nav a.active { border-color: var(--ink); }
+nav a:hover { border-color: var(--accent); }     /* gold underline on hover */
+nav a.active { border-color: var(--ink); }        /* dark underline on current page */
 
-/* ── Footer ── */
+/* ── Footer (bottom strip on every page) ── */
 footer {
   background: var(--green-soft);
   padding: 18px 60px;
   border-top: 1px solid var(--line);
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* copyright on left, location on right */
   align-items: center;
   font-size: 0.72rem;
   letter-spacing: 0.2em;
@@ -79,9 +89,10 @@ footer {
   text-transform: uppercase;
   flex-shrink: 0;
 }
+/* the gold dot separator between "Sacramento, CA" and "@instagram" */
 footer .divider { color: var(--accent); margin: 0 14px; }
 
-/* ── Script (Skystar brand spans) ── */
+/* ── Script style — used on inline "Skystar" brand mentions ── */
 .script {
   font-family: var(--script);
   font-size: 1.6em;
@@ -91,15 +102,20 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   color: var(--ink);
 }
 
-/* ── Shared typography ── */
+/* ── Eyebrow label (small caps above headings, e.g. "Featured") ── */
 .eyebrow {
   font-size: 0.7rem;
   letter-spacing: 0.4em;
-  color: var(--accent);
   text-transform: uppercase;
   margin-bottom: 14px;
+  /* gold shimmer effect on the text */
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* ── Page header (centered title block used on inner pages) ── */
 .page-header {
   text-align: center;
   margin-bottom: 40px;
@@ -110,7 +126,15 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }
-.page-header h1 em { font-style: italic; color: var(--accent); }
+/* gold shimmer on italic words inside page titles */
+.page-header h1 em {
+  font-style: italic;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* subtitle/description text under the page title */
 .page-header p {
   font-size: 0.9rem;
   color: var(--muted);
@@ -121,10 +145,13 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   margin-right: auto;
 }
 
-/* ── Responsive chrome ── */
+/* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
+  /* stack logo and nav vertically on small screens */
   header { padding: 16px 24px; flex-direction: column; gap: 14px; align-items: center; }
+  /* wrap nav links to multiple lines if needed */
   nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
+  /* stack footer items vertically */
   footer { padding: 14px 24px; flex-direction: column; gap: 6px; text-align: center; }
   .page-header h1 { font-size: 1.8rem; }
 }

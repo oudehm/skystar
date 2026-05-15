@@ -4,16 +4,56 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skystar — Handmade</title>
-<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="shared.css"> <!-- pulls in colors, fonts, header/footer styles -->
 <style>
+  /* smooth scrolling when clicking anchor links */
   html { scroll-behavior: smooth; }
 
-  /* Sticky header for homepage only */
-  header { position: sticky; top: 0; z-index: 10; }
+  /* ── HEADER — fixed, starts invisible, fades in on scroll ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    padding: 22px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.5s ease, border-color 0.5s ease;
+    pointer-events: none;
+  }
+  header.scrolled {
+    background: var(--green-soft);
+    border-bottom-color: var(--line);
+    pointer-events: all;
+  }
 
-  /* ── Splash ── */
+  /* logo inside the header — hidden until scrolled */
+  .logo-wrap {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  header.scrolled .logo-wrap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* nav — hidden until scrolled */
+  nav {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.4s ease 0.08s, transform 0.4s ease 0.08s;
+  }
+  header.scrolled nav {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Splash (the big green landing screen) ── */
   .splash {
-    min-height: 100vh;
+    min-height: 100vh; /* fills the whole screen */
     background: var(--green);
     display: flex;
     flex-direction: column;
@@ -22,29 +62,39 @@
     position: relative;
     padding: 40px 20px;
   }
+
+  /* wrapper that holds the logo + flower side by side */
   .splash-brand-wrap {
     display: flex;
     align-items: center;
     gap: 28px;
     margin-bottom: 30px;
-    animation: fadeIn 1.2s ease-out;
+    animation: fadeIn 1.2s ease-out; /* fades in on load */
   }
+
+  /* the giant "Skystar" script text */
   .splash-brand {
     font-family: var(--script);
-    font-size: clamp(5rem, 16vw, 12rem);
+    font-size: clamp(5rem, 16vw, 12rem); /* scales with screen width */
     color: var(--ink);
     line-height: 1;
     display: inline-flex;
     align-items: flex-start;
   }
+  /* nudges "star" down slightly so it sits lower than "Sky" */
   .splash-brand .star { position: relative; top: 0.14em; }
+
+  /* the flower bouquet image to the right of the logo */
   .splash-flowers {
     width: clamp(160px, 24vw, 320px);
     height: clamp(160px, 24vw, 320px);
     object-fit: contain;
-    opacity: 0.85;
+    opacity: 1;
     animation: fadeIn 1.6s ease-out;
-  }
+    
+  } 
+
+  /* the "Enter ↓" arrow at the bottom of the splash */
   .scroll-cue {
     position: absolute;
     bottom: 40px;
@@ -58,10 +108,13 @@
     opacity: 0.6;
     animation: fadeIn 2s ease-out 0.8s both, bobble 2.5s ease-in-out infinite 2.5s;
     text-decoration: none;
+    transition: opacity 0.3s;
   }
   .scroll-cue:hover { opacity: 0.95; }
+  .scroll-cue.hidden { opacity: 0 !important; pointer-events: none; animation: none; }
   .scroll-cue .scroll-label { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; }
   .scroll-cue .scroll-arrow { width: 1px; height: 40px; background: var(--ink); position: relative; }
+  /* the little diagonal tick at the bottom of the arrow line */
   .scroll-cue .scroll-arrow::after {
     content: '';
     position: absolute;
@@ -73,16 +126,19 @@
     border-right: 1px solid var(--ink);
     border-bottom: 1px solid var(--ink);
   }
+
+  /* fades element in and slides it up slightly */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+  /* makes the scroll arrow gently bounce up and down */
   @keyframes bobble {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50%       { transform: translateX(-50%) translateY(8px); }
   }
 
-  /* ── Recycle hero ── */
+  /* ── Recycle section (big image + tagline below splash) ── */
   .recycle-hero {
     min-height: 90vh;
     background: var(--pink-soft);
@@ -93,6 +149,7 @@
     padding: 80px 40px;
     text-align: center;
   }
+  /* square container that holds the recycle icon */
   .recycle-icon {
     width: clamp(280px, 38vw, 420px);
     height: clamp(280px, 38vw, 420px);
@@ -105,9 +162,8 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: invert(1);
-    mix-blend-mode: multiply;
   }
+  /* the large "Reuse the past." quote */
   .recycle-tagline {
     font-weight: 300;
     font-size: clamp(2.2rem, 5vw, 3.6rem);
@@ -115,17 +171,33 @@
     letter-spacing: -0.01em;
     max-width: 800px;
   }
-  .recycle-tagline em { font-style: italic; color: var(--accent); }
+  /* gold shimmer on the italic part of the tagline */
+  .recycle-tagline em {
+    font-style: italic;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-  /* ── Content sections ── */
+  /* ── Main content area (gallery + about) ── */
   .content { padding: 80px 80px 60px; background: var(--pink-soft); }
 
+  /* centered intro text above the photo grid */
   .section-intro { text-align: center; margin-bottom: 50px; }
   .section-intro .eyebrow { margin-bottom: 18px; }
   .section-intro h2 { font-weight: 300; font-size: 2.4rem; line-height: 1.1; letter-spacing: -0.01em; }
-  .section-intro h2 em { font-style: italic; color: var(--accent); }
+  /* gold shimmer on italic words in section headings */
+  .section-intro h2 em {
+    font-style: italic;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .section-intro p { font-size: 0.95rem; color: var(--muted); max-width: 480px; margin: 14px auto 0; line-height: 1.7; }
 
+  /* 4-column photo grid (drops to 2 on mobile) */
   .gallery {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -133,6 +205,7 @@
     max-width: 1200px;
     margin: 0 auto 90px;
   }
+  /* individual photo placeholder boxes */
   .photo {
     aspect-ratio: 3 / 4;
     background: var(--cream);
@@ -149,10 +222,12 @@
   }
   .photo:hover { opacity: 0.85; }
 
+  /* horizontal rule with "Our Story" label in the middle */
   .divider-row { display: flex; align-items: center; gap: 24px; max-width: 700px; margin: 0 auto 60px; }
   .divider-row .line { flex: 1; height: 1px; background: var(--line); }
   .divider-row .mark { font-size: 0.7rem; letter-spacing: 0.4em; color: var(--accent); text-transform: uppercase; }
 
+  /* side-by-side layout: photo on left, text on right */
   .about-grid {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
@@ -161,6 +236,7 @@
     margin: 0 auto 40px;
     align-items: center;
   }
+  /* placeholder box for the portrait/studio photo */
   .about-image {
     aspect-ratio: 4 / 5;
     background: var(--cream);
@@ -175,11 +251,22 @@
   }
   .about-content .eyebrow { margin-bottom: 16px; }
   .about-content h2 { font-weight: 300; font-size: 2.4rem; line-height: 1.1; margin-bottom: 28px; letter-spacing: -0.01em; }
-  .about-content h2 em { font-style: italic; color: var(--accent); }
+  /* gold shimmer on italic words in the about heading */
+  .about-content h2 em {
+    font-style: italic;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .about-content p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 18px; }
+  /* the "— founder" sign-off line */
   .about-content .signoff { font-style: italic; color: var(--accent); margin-top: 24px; font-size: 1.05rem; }
 
+  /* on smaller screens, stack everything vertically */
   @media (max-width: 900px) {
+    header { padding: 16px 24px; }
+    nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
     .content { padding: 50px 24px; }
     .gallery { grid-template-columns: repeat(2, 1fr); margin-bottom: 60px; }
     .about-grid { grid-template-columns: 1fr; gap: 30px; }
@@ -190,20 +277,21 @@
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
+<!-- full-screen green landing with the logo + flowers -->
 <section class="splash">
-  <div class="splash-brand-wrap">
+  <div class="splash-brand-wrap" id="splashBrand">
     <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
     <img class="splash-flowers" src="flowers.png" alt="Floral bouquet">
   </div>
-  <a href="#site" class="scroll-cue" aria-label="Scroll to enter">
+  <!-- animated arrow that nudges visitors to scroll down -->
+  <a href="#site" class="scroll-cue" id="scrollCue" aria-label="Scroll to enter">
     <span class="scroll-label">Enter</span>
     <span class="scroll-arrow"></span>
   </a>
 </section>
 
-<!-- STICKY HEADER (appears as user scrolls past splash) -->
-<header id="site">
+<!-- nav bar — fixed, fades in once you scroll past the splash -->
+<header id="siteHeader">
   <div class="logo-wrap">
     <div class="logo">Skystar</div>
     <div class="tagline">Handmade · Est. 2026</div>
@@ -219,24 +307,25 @@
   </nav>
 </header>
 
-<!-- RECYCLE HERO -->
-<section class="recycle-hero">
+<!-- big recycle icon + "Reuse the past" quote -->
+<section class="recycle-hero" id="site">
   <div class="recycle-icon">
     <img src="recycle.png" alt="Floral recycle symbol">
   </div>
-  <h1 class="recycle-tagline">Reuse the past.<br><em>Carry the future.</em></h1>
+  <h1 class="recycle-tagline">Reuse the past,<br><em>carry the future.</em></h1>
 </section>
 
-<!-- CONTENT (gallery + story) -->
+<!-- gallery and about section -->
 <main class="content">
 
+  <!-- small label + heading above the photo grid -->
   <div class="section-intro">
     <div class="eyebrow">Featured</div>
     <h2>From our <em>workroom</em></h2>
     <p>Each bag is one of a kind, made from well-loved denim.</p>
   </div>
 
-  <!-- PHOTO GALLERY -->
+  <!-- 4 product photo slots (swap placeholders for real images) -->
   <section class="gallery">
     <div class="photo"><span>Image 01</span></div>
     <div class="photo"><span>Image 02</span></div>
@@ -244,19 +333,20 @@
     <div class="photo"><span>Image 04</span></div>
   </section>
 
-  <!-- DIVIDER -->
+  <!-- decorative line break between gallery and story -->
   <div class="divider-row">
     <div class="line"></div>
     <div class="mark">Our Story</div>
     <div class="line"></div>
   </div>
 
-  <!-- ABOUT -->
+  <!-- about section: portrait photo on the left, text on the right -->
   <section class="about-grid">
     <div class="about-image"><span>Portrait or studio shot</span></div>
     <div class="about-content">
       <div class="eyebrow">About <span class="script">Skystar</span></div>
       <h2>Small batch, <em>made slowly.</em></h2>
+      <!-- fill these in with your own story -->
       <p>[ How Skystar started — the moment the idea sparked, the first bag, what drew you to denim. ]</p>
       <p>[ Your process — where the fabric comes from, how long a bag takes, the care that goes into each one. ]</p>
       <p>[ What you hope for the person who carries one. ]</p>
@@ -269,6 +359,33 @@
   <div>© 2026 <span class="script">Skystar</span></div>
   <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
 </footer>
+
+<script>
+  const header    = document.getElementById('siteHeader');
+  const brand     = document.getElementById('splashBrand');
+  const scrollCue = document.getElementById('scrollCue');
+  const splash    = document.querySelector('.splash');
+
+  function onScroll() {
+    const scrollY  = window.scrollY;
+    const splashH  = splash.offsetHeight;
+
+    // 0 at top of splash, 1 when fully scrolled past
+    const progress = Math.min(scrollY / splashH, 1);
+
+    // brand gently fades out as you scroll — stays centered so the splash never looks empty
+    brand.style.opacity = String(Math.max(0, 1 - progress * 1.4));
+
+    // header fades in at 60% progress
+    header.classList.toggle('scrolled', progress > 0.6);
+
+    // hide Enter cue once scrolling starts
+    scrollCue.classList.toggle('hidden', scrollY > 30);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run once on load
+</script>
 
 </body>
 </html>
