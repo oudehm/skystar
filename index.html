@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skystar — Handmade</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  html { scroll-behavior: smooth; }
+
+  /* Sticky header for homepage only */
+  header { position: sticky; top: 0; z-index: 10; }
+
+  /* ── Splash ── */
+  .splash {
+    min-height: 100vh;
+    background: var(--green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 20px;
+  }
+  .splash-brand {
+    font-family: var(--script);
+    font-size: clamp(5rem, 16vw, 12rem);
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 30px;
+    animation: fadeIn 1.2s ease-out;
+    display: inline-flex;
+    align-items: flex-start;
+  }
+  .splash-brand .star { position: relative; top: 0.14em; }
+  .scroll-cue {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink);
+    opacity: 0.6;
+    animation: fadeIn 2s ease-out 0.8s both, bobble 2.5s ease-in-out infinite 2.5s;
+    text-decoration: none;
+  }
+  .scroll-cue:hover { opacity: 0.95; }
+  .scroll-cue .scroll-label { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; }
+  .scroll-cue .scroll-arrow { width: 1px; height: 40px; background: var(--ink); position: relative; }
+  .scroll-cue .scroll-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bobble {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── Recycle hero ── */
+  .recycle-hero {
+    min-height: 90vh;
+    background: var(--pink-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+  }
+  .recycle-icon {
+    width: clamp(280px, 38vw, 420px);
+    height: clamp(280px, 38vw, 420px);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .recycle-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: invert(1);
+    mix-blend-mode: multiply;
+  }
+  .recycle-tagline {
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 800px;
+  }
+  .recycle-tagline em { font-style: italic; color: var(--accent); }
+
+  /* ── Content sections ── */
+  .content { padding: 80px 80px 60px; background: var(--pink-soft); }
+
+  .section-intro { text-align: center; margin-bottom: 50px; }
+  .section-intro .eyebrow { margin-bottom: 18px; }
+  .section-intro h2 { font-weight: 300; font-size: 2.4rem; line-height: 1.1; letter-spacing: -0.01em; }
+  .section-intro h2 em { font-style: italic; color: var(--accent); }
+  .section-intro p { font-size: 0.95rem; color: var(--muted); max-width: 480px; margin: 14px auto 0; line-height: 1.7; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    max-width: 1200px;
+    margin: 0 auto 90px;
+  }
+  .photo {
+    aspect-ratio: 3 / 4;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: opacity 0.3s;
+  }
+  .photo:hover { opacity: 0.85; }
+
+  .divider-row { display: flex; align-items: center; gap: 24px; max-width: 700px; margin: 0 auto 60px; }
+  .divider-row .line { flex: 1; height: 1px; background: var(--line); }
+  .divider-row .mark { font-size: 0.7rem; letter-spacing: 0.4em; color: var(--accent); text-transform: uppercase; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    align-items: center;
+  }
+  .about-image {
+    aspect-ratio: 4 / 5;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .about-content .eyebrow { margin-bottom: 16px; }
+  .about-content h2 { font-weight: 300; font-size: 2.4rem; line-height: 1.1; margin-bottom: 28px; letter-spacing: -0.01em; }
+  .about-content h2 em { font-style: italic; color: var(--accent); }
+  .about-content p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 18px; }
+  .about-content .signoff { font-style: italic; color: var(--accent); margin-top: 24px; font-size: 1.05rem; }
+
+  @media (max-width: 900px) {
+    .content { padding: 50px 24px; }
+    .gallery { grid-template-columns: repeat(2, 1fr); margin-bottom: 60px; }
+    .about-grid { grid-template-columns: 1fr; gap: 30px; }
+    .about-content h2 { font-size: 1.8rem; }
+    .section-intro h2 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<section class="splash">
+  <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
+  <a href="#site" class="scroll-cue" aria-label="Scroll to enter">
+    <span class="scroll-label">Enter</span>
+    <span class="scroll-arrow"></span>
+  </a>
+</section>
+
+<!-- STICKY HEADER (appears as user scrolls past splash) -->
+<header id="site">
+  <div class="logo-wrap">
+    <div class="logo">Skystar</div>
+    <div class="tagline">Handmade · Est. 2026</div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="inventory.html">Lookbook</a></li>
+      <li><a href="popups.html">Events</a></li>
+      <li><a href="interest.html">Request</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- RECYCLE HERO -->
+<section class="recycle-hero">
+  <div class="recycle-icon">
+    <img src="recycle.png" alt="Floral recycle symbol">
+  </div>
+  <h1 class="recycle-tagline">Reuse the past.<br><em>Carry the future.</em></h1>
+</section>
+
+<!-- CONTENT (gallery + story) -->
+<main class="content">
+
+  <div class="section-intro">
+    <div class="eyebrow">Featured</div>
+    <h2>From our <em>workroom</em></h2>
+    <p>Each bag is one of a kind, made from well-loved denim.</p>
+  </div>
+
+  <!-- PHOTO GALLERY -->
+  <section class="gallery">
+    <div class="photo"><span>Image 01</span></div>
+    <div class="photo"><span>Image 02</span></div>
+    <div class="photo"><span>Image 03</span></div>
+    <div class="photo"><span>Image 04</span></div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="divider-row">
+    <div class="line"></div>
+    <div class="mark">Our Story</div>
+    <div class="line"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about-grid">
+    <div class="about-image"><span>Portrait or studio shot</span></div>
+    <div class="about-content">
+      <div class="eyebrow">About <span class="script">Skystar</span></div>
+      <h2>Small batch, <em>made slowly.</em></h2>
+      <p>[ How Skystar started — the moment the idea sparked, the first bag, what drew you to denim. ]</p>
+      <p>[ Your process — where the fabric comes from, how long a bag takes, the care that goes into each one. ]</p>
+      <p>[ What you hope for the person who carries one. ]</p>
+      <div class="signoff">— [your name], founder</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>© 2026 <span class="script">Skystar</span></div>
+  <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
+</footer>
+
+</body>
+</html>

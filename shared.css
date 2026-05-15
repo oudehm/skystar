@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+:root {
+  --pink: #fad7ea;
+  --pink-soft: #fdf1f4;
+  --green: #ecf7e9;
+  --green-soft: #ecf7e9;
+  --green-deep: #ecf7e9;
+  --cream: #fdfaf6;
+  --ink: #344628;
+  --muted: #7a7373;
+  --line: #e8dcd8;
+  --accent: #8a6b50;
+  --script: 'Great Vibes', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  background: var(--pink-soft);
+  color: var(--ink);
+  font-weight: 300;
+}
+
+/* ── Header ── */
+header {
+  background: var(--green-soft);
+  padding: 22px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.logo-wrap { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
+.logo {
+  font-family: var(--script);
+  font-weight: 400;
+  font-size: 2.8rem;
+  letter-spacing: 0;
+  color: var(--ink);
+  line-height: 1;
+}
+.tagline {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+/* ── Nav ── */
+nav ul { list-style: none; display: flex; gap: 32px; }
+nav a {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+nav a:hover { border-color: var(--accent); }
+nav a.active { border-color: var(--ink); }
+
+/* ── Footer ── */
+footer {
+  background: var(--green-soft);
+  padding: 18px 60px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+footer .divider { color: var(--accent); margin: 0 14px; }
+
+/* ── Script (Skystar brand spans) ── */
+.script {
+  font-family: var(--script);
+  font-size: 1.6em;
+  vertical-align: middle;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+/* ── Shared typography ── */
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.page-header h1 {
+  font-weight: 300;
+  font-size: 2.6rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 12px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Responsive chrome ── */
+@media (max-width: 900px) {
+  header { padding: 16px 24px; flex-direction: column; gap: 14px; align-items: center; }
+  nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
+  footer { padding: 14px 24px; flex-direction: column; gap: 6px; text-align: center; }
+  .page-header h1 { font-size: 1.8rem; }
+}
