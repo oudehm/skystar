@@ -22,17 +22,29 @@
     position: relative;
     padding: 40px 20px;
   }
+  .splash-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 30px;
+    animation: fadeIn 1.2s ease-out;
+  }
   .splash-brand {
     font-family: var(--script);
     font-size: clamp(5rem, 16vw, 12rem);
     color: var(--ink);
     line-height: 1;
-    margin-bottom: 30px;
-    animation: fadeIn 1.2s ease-out;
     display: inline-flex;
     align-items: flex-start;
   }
   .splash-brand .star { position: relative; top: 0.14em; }
+  .splash-flowers {
+    width: clamp(160px, 24vw, 320px);
+    height: clamp(160px, 24vw, 320px);
+    object-fit: contain;
+    opacity: 0.85;
+    animation: fadeIn 1.6s ease-out;
+  }
   .scroll-cue {
     position: absolute;
     bottom: 40px;
@@ -180,7 +192,10 @@
 
 <!-- SPLASH SCREEN -->
 <section class="splash">
-  <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
+  <div class="splash-brand-wrap">
+    <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
+    <img class="splash-flowers" src="flowers.png" alt="Floral bouquet">
+  </div>
   <a href="#site" class="scroll-cue" aria-label="Scroll to enter">
     <span class="scroll-label">Enter</span>
     <span class="scroll-arrow"></span>
