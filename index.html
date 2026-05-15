@@ -70,6 +70,7 @@
     gap: 28px;
     margin-bottom: 30px;
     animation: fadeIn 1.2s ease-out; /* fades in on load */
+    will-change: transform, opacity;
   }
 
   /* the giant "Skystar" script text */
@@ -89,10 +90,9 @@
     width: clamp(160px, 24vw, 320px);
     height: clamp(160px, 24vw, 320px);
     object-fit: contain;
-    opacity: 1;
-    animation: fadeIn 1.6s ease-out;
-    
-  } 
+    opacity: 0.85;
+    animation: fadeIn 1.6s ease-out; /* fades in slightly after the text */
+  }
 
   /* the "Enter ↓" arrow at the bottom of the splash */
   .scroll-cue {
@@ -174,10 +174,7 @@
   /* gold shimmer on the italic part of the tagline */
   .recycle-tagline em {
     font-style: italic;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
   }
 
   /* ── Main content area (gallery + about) ── */
@@ -190,10 +187,7 @@
   /* gold shimmer on italic words in section headings */
   .section-intro h2 em {
     font-style: italic;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
   }
   .section-intro p { font-size: 1.4rem; font-family: var(--script); color: var(--accent); max-width: 480px; margin: 14px auto 0; line-height: 1.7; }
 
@@ -254,10 +248,7 @@
   /* gold shimmer on italic words in the about heading */
   .about-content h2 em {
     font-style: italic;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
   }
   .about-content p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 18px; }
   /* the "— founder" sign-off line */
@@ -312,7 +303,7 @@
   <div class="recycle-icon">
     <img src="recycle.png" alt="Floral recycle symbol">
   </div>
-  <h1 class="recycle-tagline">Reuse the past,<br><em>carry the future.</em></h1>
+  <h1 class="recycle-tagline">Reuse the past.<br><em>Carry the future.</em></h1>
 </section>
 
 <!-- gallery and about section -->
@@ -373,13 +364,23 @@
     // 0 at top of splash, 1 when fully scrolled past
     const progress = Math.min(scrollY / splashH, 1);
 
-    // brand gently fades out as you scroll — stays centered so the splash never looks empty
-    brand.style.opacity = String(Math.max(0, 1 - progress * 1.4));
+    // ── Shrink + drift brand toward top-left (where header logo lives) ──
+    const scale = 1 - progress * 0.78;
 
-    // header fades in at 60% progress
+    const vw = window.innerWidth;
+    const vh = splash.offsetHeight;
+    const destX = -(vw / 2 - 80);   // 80px matches header left padding
+    const destY = -(vh / 2 - 36);   // 36px ≈ header vertical center
+
+    brand.style.transform = `translate(${destX * progress}px, ${destY * progress}px) scale(${scale})`;
+
+    // fade brand out in the final 20% of scroll
+    brand.style.opacity = progress > 0.8 ? String(1 - (progress - 0.8) / 0.2) : '1';
+
+    // ── Header fades in at 60% progress ──
     header.classList.toggle('scrolled', progress > 0.6);
 
-    // hide Enter cue once scrolling starts
+    // ── Hide Enter cue once scrolling starts ──
     scrollCue.classList.toggle('hidden', scrollY > 30);
   }
 

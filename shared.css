@@ -13,9 +13,7 @@
   --ink: #344628;           /* dark green — main text color */
   --muted: #7a7373;         /* grey — secondary/caption text */
   --line: #e8dcd8;          /* dusty rose — borders and dividers */
-  --accent: #d16b8c;        /* dusty rose — used for labels, highlights */
-  /* dusty rose gradient — echoes the flower illustration, soft shimmer on text */
-  --accent-gradient: linear-gradient(135deg, #e8a0b8 0%, #d16b8c 35%, #b8486e 60%, #d16b8c 80%, #e8a0b8 100%);
+  --accent: #de87a3;        /* dusty rose — used for labels, highlights */
   --script: 'Great Vibes', cursive; /* the fancy cursive font for "Skystar" */
 }
 
@@ -72,8 +70,8 @@ nav a {
   border-bottom: 1px solid transparent; /* invisible underline by default */
   transition: border-color 0.2s;
 }
-nav a:hover { border-color: var(--accent); }     /* gold underline on hover */
-nav a.active { border-color: var(--ink); }        /* dark underline on current page */
+nav a:hover { border-color: var(--accent); }
+nav a.active { border-color: var(--ink); }
 
 /* ── Footer (bottom strip on every page) ── */
 footer {
@@ -81,7 +79,7 @@ footer {
   padding: 18px 60px;
   border-top: 1px solid var(--line);
   display: flex;
-  justify-content: space-between; /* copyright on left, location on right */
+  justify-content: space-between;
   align-items: center;
   font-size: 0.72rem;
   letter-spacing: 0.2em;
@@ -89,7 +87,6 @@ footer {
   text-transform: uppercase;
   flex-shrink: 0;
 }
-/* the gold dot separator between "Sacramento, CA" and "@instagram" */
 footer .divider { color: var(--accent); margin: 0 14px; }
 
 /* ── Script style — used on inline "Skystar" brand mentions ── */
@@ -108,11 +105,7 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   letter-spacing: 0.4em;
   text-transform: uppercase;
   margin-bottom: 14px;
-  /* gold shimmer effect on the text */
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent);
 }
 
 /* ── Page header (centered title block used on inner pages) ── */
@@ -126,13 +119,10 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }
-/* gold shimmer on italic words inside page titles */
+/* accent color on italic words inside page titles */
 .page-header h1 em {
   font-style: italic;
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent);
 }
 /* subtitle/description text under the page title */
 .page-header p {
@@ -147,11 +137,8 @@ footer .divider { color: var(--accent); margin: 0 14px; }
 
 /* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
-  /* stack logo and nav vertically on small screens */
   header { padding: 16px 24px; flex-direction: column; gap: 14px; align-items: center; }
-  /* wrap nav links to multiple lines if needed */
   nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
-  /* stack footer items vertically */
   footer { padding: 14px 24px; flex-direction: column; gap: 6px; text-align: center; }
   .page-header h1 { font-size: 1.8rem; }
 }
