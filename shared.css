@@ -13,9 +13,9 @@
   --ink: #344628;           /* dark green — main text color */
   --muted: #7a7373;         /* grey — secondary/caption text */
   --line: #e8dcd8;          /* dusty rose — borders and dividers */
-  --accent: #f07aa0;        /* dusty rose — used for labels, highlights */
+  --accent: #d16b8c;        /* dusty rose — used for labels, highlights */
   /* dusty rose gradient — echoes the flower illustration, soft shimmer on text */
-  --accent-gradient: linear-gradient(135deg, #f5a0bc 0%, #f07aa0 45%, #e85d8a 70%, #f28fb0 100%);
+  --accent-gradient: linear-gradient(135deg, #e8a0b8 0%, #d16b8c 35%, #b8486e 60%, #d16b8c 80%, #e8a0b8 100%);
   --script: 'Great Vibes', cursive; /* the fancy cursive font for "Skystar" */
 }
 
