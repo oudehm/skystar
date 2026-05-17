@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Skystar</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink-soft: #fdf1f4;
+    --green: #ecf7e9;
+    --green-soft: #ecf7e9;
+    --cream: #fdfaf6;
+    --ink: #344628;
+    --muted: #7a7373;
+    --line: #e8dcd8;
+    --accent: #de87a3;
+    --red: #b54a4a;
+    --script: 'Great Vibes', cursive;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: var(--pink-soft);
+    color: var(--ink);
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN SCREEN ── */
+  .login-screen {
+    min-height: 100vh;
+    background: var(--green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .login-screen .logo {
+    font-family: var(--script);
+    font-size: 5rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .login-screen .tagline {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+  .login-box {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 40px 44px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .login-box .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 22px;
+    text-align: center;
+  }
+  .login-box label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .login-box input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+  .login-box input:focus { outline: none; border-bottom-color: var(--accent); }
+  .btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--ink);
+    color: var(--pink-soft);
+    border: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: var(--accent); }
+  .btn.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    margin-top: 10px;
+  }
+  .btn.secondary:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .btn.danger { background: var(--red); }
+  .btn.danger:hover { background: #8f3333; }
+  .login-error {
+    color: var(--red);
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 14px;
+    display: none;
+  }
+  .login-error.show { display: block; }
+
+  /* ── DASHBOARD ── */
+  .dashboard { display: none; flex-direction: column; min-height: 100vh; }
+  .dashboard.show { display: flex; }
+
+  /* header */
+  .dash-header {
+    background: var(--green-soft);
+    border-bottom: 1px solid var(--line);
+    padding: 18px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .dash-header .brand { display: flex; flex-direction: column; }
+  .dash-header .logo { font-family: var(--script); font-size: 2.6rem; color: var(--ink); line-height: 1; }
+  .dash-header .tagline { font-size: 0.6rem; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+  .dash-header .header-right { display: flex; align-items: center; gap: 24px; }
+  .dash-header .admin-label { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+  .logout-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* tabs */
+  .dash-tabs {
+    background: var(--green-soft);
+    border-bottom: 1px solid var(--line);
+    padding: 0 50px;
+    display: flex;
+    gap: 0;
+    flex-shrink: 0;
+  }
+  .tab {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 14px 24px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* main content */
+  .dash-body { flex: 1; padding: 44px 50px; overflow-y: auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .panel-header h2 { font-weight: 300; font-size: 2rem; letter-spacing: -0.01em; }
+  .panel-header h2 em { font-style: italic; color: var(--accent); }
+  .panel-header .eyebrow { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+
+  /* ── FORM MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(52, 70, 40, 0.18);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 40px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h3 { font-weight: 300; font-size: 1.6rem; margin-bottom: 28px; letter-spacing: -0.01em; }
+  .modal h3 em { font-style: italic; color: var(--accent); }
+  .form-field { margin-bottom: 20px; }
+  .form-field label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus { outline: none; border-bottom-color: var(--accent); }
+  .form-field textarea { resize: vertical; min-height: 80px; border: 1px solid var(--line); padding: 10px 12px; }
+  .form-field textarea:focus { border-color: var(--accent); }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 10px; }
+  .modal-actions .btn { flex: 1; }
+
+  /* ── PRODUCT CARDS ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .product-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card .card-img {
+    aspect-ratio: 4/5;
+    background: var(--pink-soft);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    overflow: hidden;
+    position: relative;
+  }
+  .product-card .card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .status-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border: 1px solid var(--ink);
+    background: var(--pink-soft);
+    color: var(--ink);
+  }
+  .status-badge.sold { background: var(--ink); color: var(--pink-soft); }
+  .product-card .card-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; }
+  .product-card h3 { font-weight: 400; font-size: 1.1rem; margin-bottom: 4px; }
+  .product-card .card-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+  .product-card .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-bottom: 14px; flex: 1; }
+  .card-actions { display: flex; gap: 8px; margin-top: auto; }
+  .card-actions button {
+    flex: 1;
+    padding: 8px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .card-actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .card-actions button.del:hover { border-color: var(--red); color: var(--red); }
+  .card-actions button.toggle-sold { border-color: var(--ink); }
+  .card-actions button.toggle-sold.is-sold { background: var(--ink); color: var(--pink-soft); }
+
+  /* ── EVENTS LIST ── */
+  .events-list { max-width: 760px; }
+  .event-row {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 28px;
+    align-items: center;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+  .event-row:last-child { border-bottom: 1px solid var(--line); }
+  .event-date { text-align: center; }
+  .event-date .month { font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 3px; }
+  .event-date .day { font-size: 2rem; font-weight: 300; line-height: 1; }
+  .event-info h3 { font-weight: 400; font-size: 1.1rem; margin-bottom: 4px; }
+  .event-info .details { font-size: 0.82rem; color: var(--muted); }
+  .event-actions { display: flex; gap: 8px; }
+  .event-actions button {
+    padding: 6px 14px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .event-actions button:hover { border-color: var(--accent); color: var(--accent); }
+  .event-actions button.del:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── REQUESTS LIST ── */
+  .requests-list { max-width: 860px; }
+  .request-row {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 22px 26px;
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: start;
+  }
+  .request-name { font-weight: 400; font-size: 1rem; margin-bottom: 4px; }
+  .request-email { font-size: 0.8rem; color: var(--accent); margin-bottom: 10px; letter-spacing: 0.05em; }
+  .request-msg { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .request-date { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 10px; }
+  .request-actions button {
+    padding: 6px 14px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .request-actions button:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+
+  /* ── LOADING ── */
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--ink);
+    color: var(--pink-soft);
+    padding: 12px 22px;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .dash-header { padding: 14px 20px; }
+    .dash-tabs { padding: 0 20px; }
+    .dash-body { padding: 30px 20px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+    .event-row { grid-template-columns: 60px 1fr; }
+    .event-actions { grid-column: 2; }
+  }
+  @media (max-width: 520px) {
+    .products-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="logo">Skystar</div>
+  <div class="tagline">Admin Dashboard</div>
+  <div class="login-box">
+    <div class="eyebrow">Sign In</div>
+    <label for="passwordInput">Password</label>
+    <input type="password" id="passwordInput" placeholder="Enter admin password">
+    <button class="btn" onclick="login()">Enter</button>
+    <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     DASHBOARD
+══════════════════════════════════ -->
+<div class="dashboard" id="dashboard">
+
+  <!-- header -->
+  <div class="dash-header">
+    <div class="brand">
+      <div class="logo">Skystar</div>
+      <div class="tagline">Admin Dashboard</div>
+    </div>
+    <div class="header-right">
+      <span class="admin-label">Admin</span>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+
+  <!-- tabs -->
+  <div class="dash-tabs">
+    <button class="tab active" onclick="switchTab('products')">Products</button>
+    <button class="tab" onclick="switchTab('events')">Events</button>
+    <button class="tab" onclick="switchTab('requests')">Requests</button>
+  </div>
+
+  <!-- body -->
+  <div class="dash-body">
+
+    <!-- PRODUCTS PANEL -->
+    <div class="panel active" id="panel-products">
+      <div class="panel-header">
+        <div>
+          <div class="eyebrow">Lookbook</div>
+          <h2>Your <em>products</em></h2>
+        </div>
+        <button class="btn" style="width:auto;padding:12px 28px;" onclick="openProductModal()">+ Add Product</button>
+      </div>
+      <div class="products-grid" id="productsGrid">
+        <div class="loading">Loading products…</div>
+      </div>
+    </div>
+
+    <!-- EVENTS PANEL -->
+    <div class="panel" id="panel-events">
+      <div class="panel-header">
+        <div>
+          <div class="eyebrow">Pop-Ups</div>
+          <h2>Upcoming <em>events</em></h2>
+        </div>
+        <button class="btn" style="width:auto;padding:12px 28px;" onclick="openEventModal()">+ Add Event</button>
+      </div>
+      <div class="events-list" id="eventsList">
+        <div class="loading">Loading events…</div>
+      </div>
+    </div>
+
+    <!-- REQUESTS PANEL -->
+    <div class="panel" id="panel-requests">
+      <div class="panel-header">
+        <div>
+          <div class="eyebrow">From Customers</div>
+          <h2>Incoming <em>requests</em></h2>
+        </div>
+      </div>
+      <div class="requests-list" id="requestsList">
+        <div class="loading">Loading requests…</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PRODUCT MODAL
+══════════════════════════════════ -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <h3 id="productModalTitle">Add a <em>product</em></h3>
+    <input type="hidden" id="productId">
+
+    <div class="form-row-2">
+      <div class="form-field">
+        <label>Bag Name</label>
+        <input type="text" id="pName" placeholder="e.g. Vintage Tote">
+      </div>
+      <div class="form-field">
+        <label>Style</label>
+        <input type="text" id="pStyle" placeholder="e.g. Tote, Crossbody">
+      </div>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-field">
+        <label>Price ($)</label>
+        <input type="number" id="pPrice" placeholder="45">
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select id="pStatus">
+          <option value="available">Available</option>
+          <option value="sold">Sold</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Event / Where it'll be</label>
+      <input type="text" id="pEvent" placeholder="e.g. Midtown Market">
+    </div>
+
+    <div class="form-field">
+      <label>Image URL</label>
+      <input type="text" id="pImage" placeholder="https://res.cloudinary.com/...">
+    </div>
+
+    <div class="form-field">
+      <label>Description</label>
+      <textarea id="pDesc" placeholder="Fabric details, size, what makes it special…"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeProductModal()">Cancel</button>
+      <button class="btn" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     EVENT MODAL
+══════════════════════════════════ -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal">
+    <h3 id="eventModalTitle">Add an <em>event</em></h3>
+    <input type="hidden" id="eventId">
+
+    <div class="form-field">
+      <label>Event Name</label>
+      <input type="text" id="eName" placeholder="e.g. Midtown Farmers Market">
+    </div>
+
+    <div class="form-field">
+      <label>Venue / Address</label>
+      <input type="text" id="eVenue" placeholder="e.g. 1000 Main St, Sacramento">
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-field">
+        <label>Date</label>
+        <input type="date" id="eDate">
+      </div>
+      <div class="form-field">
+        <label>Start Time</label>
+        <input type="text" id="eStart" placeholder="e.g. 9:00 AM">
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>End Time</label>
+      <input type="text" id="eEnd" placeholder="e.g. 2:00 PM">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeEventModal()">Cancel</button>
+      <button class="btn" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'https://skystar-backend.onrender.com';
+  let token = localStorage.getItem('skystar_token') || null;
+
+  // ── AUTH ──────────────────────────────
+  async function login() {
+    const password = document.getElementById('passwordInput').value;
+    const error    = document.getElementById('loginError');
+    error.classList.remove('show');
+
+    try {
+      const res  = await fetch(`${API}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        error.classList.add('show');
+        return;
+      }
+
+      token = data.token;
+      localStorage.setItem('skystar_token', token);
+      showDashboard();
+    } catch {
+      error.textContent = 'Could not connect to server.';
+      error.classList.add('show');
+    }
+  }
+
+  function logout() {
+    token = null;
+    localStorage.removeItem('skystar_token');
+    document.getElementById('dashboard').classList.remove('show');
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('passwordInput').value = '';
+  }
+
+  function showDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').classList.add('show');
+    loadProducts();
+    loadEvents();
+    loadRequests();
+  }
+
+  // auto-login if token exists
+  if (token) showDashboard();
+
+  // login on Enter key
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+
+  // ── TABS ──────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(`panel-${name}`).classList.add('active');
+  }
+
+  // ── TOAST ──────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ── PRODUCTS ──────────────────────────────
+  async function loadProducts() {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '<div class="loading">Loading products…</div>';
+    try {
+      const res      = await fetch(`${API}/products`);
+      const products = await res.json();
+
+      if (!products.length) {
+        grid.innerHTML = '<div class="empty">No products yet — add your first bag above.</div>';
+        return;
+      }
+
+      grid.innerHTML = products.map(p => `
+        <div class="product-card">
+          <div class="card-img">
+            <span class="status-badge ${p.status === 'sold' ? 'sold' : ''}">${p.status === 'sold' ? 'Sold' : 'Available'}</span>
+            ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}">` : '<span>No photo yet</span>'}
+          </div>
+          <div class="card-body">
+            <h3>${p.name}</h3>
+            <div class="card-meta">
+              <span>${p.style || '—'}</span>
+              <span>$${p.price}</span>
+            </div>
+            <p class="card-desc">${p.description || ''}</p>
+            <div style="font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;">${p.event ? 'At · ' + p.event : ''}</div>
+            <div class="card-actions">
+              <button onclick="editProduct('${p._id}')">Edit</button>
+              <button class="toggle-sold ${p.status === 'sold' ? 'is-sold' : ''}" onclick="toggleSold('${p._id}', '${p.status}')">${p.status === 'sold' ? 'Mark Available' : 'Mark Sold'}</button>
+              <button class="del" onclick="deleteProduct('${p._id}')">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    } catch {
+      grid.innerHTML = '<div class="empty">Could not load products.</div>';
+    }
+  }
+
+  function openProductModal(p = null) {
+    document.getElementById('productId').value  = p?._id || '';
+    document.getElementById('pName').value      = p?.name || '';
+    document.getElementById('pStyle').value     = p?.style || '';
+    document.getElementById('pPrice').value     = p?.price || '';
+    document.getElementById('pStatus').value    = p?.status || 'available';
+    document.getElementById('pEvent').value     = p?.event || '';
+    document.getElementById('pImage').value     = p?.imageUrl || '';
+    document.getElementById('pDesc').value      = p?.description || '';
+    document.getElementById('productModalTitle').innerHTML = p ? 'Edit <em>product</em>' : 'Add a <em>product</em>';
+    document.getElementById('productModal').classList.add('show');
+  }
+
+  function closeProductModal() {
+    document.getElementById('productModal').classList.remove('show');
+  }
+
+  async function editProduct(id) {
+    const res = await fetch(`${API}/products/${id}`);
+    const p   = await res.json();
+    openProductModal(p);
+  }
+
+  async function saveProduct() {
+    const id   = document.getElementById('productId').value;
+    const body = {
+      name:        document.getElementById('pName').value,
+      style:       document.getElementById('pStyle').value,
+      price:       parseFloat(document.getElementById('pPrice').value),
+      status:      document.getElementById('pStatus').value,
+      event:       document.getElementById('pEvent').value,
+      imageUrl:    document.getElementById('pImage').value,
+      description: document.getElementById('pDesc').value,
+    };
+
+    const url    = id ? `${API}/products/${id}` : `${API}/products`;
+    const method = id ? 'PUT' : 'POST';
+
+    await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    closeProductModal();
+    loadProducts();
+    showToast(id ? 'Product updated ✦' : 'Product added ✦');
+  }
+
+  async function toggleSold(id, currentStatus) {
+    const newStatus = currentStatus === 'sold' ? 'available' : 'sold';
+    await fetch(`${API}/products/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ status: newStatus })
+    });
+    loadProducts();
+    showToast(newStatus === 'sold' ? 'Marked as sold ✦' : 'Marked as available ✦');
+  }
+
+  async function deleteProduct(id) {
+    if (!confirm('Delete this product?')) return;
+    await fetch(`${API}/products/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadProducts();
+    showToast('Product deleted');
+  }
+
+  // ── EVENTS ──────────────────────────────
+  async function loadEvents() {
+    const list = document.getElementById('eventsList');
+    list.innerHTML = '<div class="loading">Loading events…</div>';
+    try {
+      const res    = await fetch(`${API}/events`);
+      const events = await res.json();
+
+      if (!events.length) {
+        list.innerHTML = '<div class="empty">No events yet — add your first pop-up above.</div>';
+        return;
+      }
+
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      list.innerHTML = events.map(e => {
+        const d = new Date(e.date);
+        return `
+          <div class="event-row">
+            <div class="event-date">
+              <div class="month">${months[d.getMonth()]}</div>
+              <div class="day">${d.getDate()}</div>
+            </div>
+            <div class="event-info">
+              <h3>${e.name}</h3>
+              <div class="details">${e.venue || ''} ${e.startTime ? '· ' + e.startTime + ' – ' + e.endTime : ''}</div>
+            </div>
+            <div class="event-actions">
+              <button onclick="editEvent('${e._id}')">Edit</button>
+              <button class="del" onclick="deleteEvent('${e._id}')">Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch {
+      list.innerHTML = '<div class="empty">Could not load events.</div>';
+    }
+  }
+
+  function openEventModal(e = null) {
+    document.getElementById('eventId').value  = e?._id || '';
+    document.getElementById('eName').value    = e?.name || '';
+    document.getElementById('eVenue').value   = e?.venue || '';
+    document.getElementById('eDate').value    = e?.date ? e.date.substring(0,10) : '';
+    document.getElementById('eStart').value   = e?.startTime || '';
+    document.getElementById('eEnd').value     = e?.endTime || '';
+    document.getElementById('eventModalTitle').innerHTML = e ? 'Edit <em>event</em>' : 'Add an <em>event</em>';
+    document.getElementById('eventModal').classList.add('show');
+  }
+
+  function closeEventModal() {
+    document.getElementById('eventModal').classList.remove('show');
+  }
+
+  async function editEvent(id) {
+    const res = await fetch(`${API}/events/${id}`);
+    const e   = await res.json();
+    openEventModal(e);
+  }
+
+  async function saveEvent() {
+    const id   = document.getElementById('eventId').value;
+    const body = {
+      name:      document.getElementById('eName').value,
+      venue:     document.getElementById('eVenue').value,
+      date:      document.getElementById('eDate').value,
+      startTime: document.getElementById('eStart').value,
+      endTime:   document.getElementById('eEnd').value,
+    };
+
+    const url    = id ? `${API}/events/${id}` : `${API}/events`;
+    const method = id ? 'PUT' : 'POST';
+
+    await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    closeEventModal();
+    loadEvents();
+    showToast(id ? 'Event updated ✦' : 'Event added ✦');
+  }
+
+  async function deleteEvent(id) {
+    if (!confirm('Delete this event?')) return;
+    await fetch(`${API}/events/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadEvents();
+    showToast('Event deleted');
+  }
+
+  // ── REQUESTS ──────────────────────────────
+  async function loadRequests() {
+    const list = document.getElementById('requestsList');
+    list.innerHTML = '<div class="loading">Loading requests…</div>';
+    try {
+      const res      = await fetch(`${API}/requests`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const requests = await res.json();
+
+      if (!requests.length) {
+        list.innerHTML = '<div class="empty">No requests yet.</div>';
+        return;
+      }
+
+      list.innerHTML = requests.map(r => `
+        <div class="request-row">
+          <div>
+            <div class="request-name">${r.firstName} ${r.lastName}</div>
+            <div class="request-email">${r.email}</div>
+            <div class="request-msg">${r.message || '—'}</div>
+            <div class="request-date">${new Date(r.submittedAt || r.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+          </div>
+          <div class="request-actions">
+            <button onclick="deleteRequest('${r._id}')">Dismiss</button>
+          </div>
+        </div>
+      `).join('');
+    } catch {
+      list.innerHTML = '<div class="empty">Could not load requests.</div>';
+    }
+  }
+
+  async function deleteRequest(id) {
+    if (!confirm('Dismiss this request?')) return;
+    await fetch(`${API}/requests/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadRequests();
+    showToast('Request dismissed');
+  }
+
+  // close modals on overlay click
+  document.getElementById('productModal').addEventListener('click', function(e) {
+    if (e.target === this) closeProductModal();
+  });
+  document.getElementById('eventModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEventModal();
+  });
+</script>
+
+</body>
+</html>

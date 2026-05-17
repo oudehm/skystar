@@ -97,10 +97,7 @@
 <!-- nav bar -->
 <header>
   <div class="logo-wrap">
-    <div class="logo-row">
-      <div class="logo">Skystar</div>
-      <img class="header-flower" src="flowers.png" alt="">
-    </div>
+    <div class="logo">Skystar</div>
     <div class="tagline">Handmade · Est. 2026</div>
   </div>
   <nav>
@@ -127,8 +124,58 @@
     <strong>In-person only</strong> &nbsp;·&nbsp; Want to claim one early? <a href="interest.html">Submit a request</a> or find us at our <a href="popups.html">next event</a>.
   </div>
 
-  <!-- product cards are injected here by the script below -->
-  <div class="shop-grid" id="productsGrid"></div>
+  <!-- bag cards grid — add or remove product blocks here -->
+  <div class="shop-grid">
+
+    <!-- BAG 1 — replace "Photo" with an <img> tag when ready -->
+    <div class="product">
+      <div class="img-area">
+        <div class="status-tag">Available</div>
+        <span>Photo</span>
+      </div>
+      <h2>[ Bag Name ]</h2>
+      <div class="meta">
+        <span>[ Style ]</span>
+        <span class="price">$[ price ]</span>
+      </div>
+      <p class="desc">[ Short description — fabric details, size, what makes it special. ]</p>
+      <div class="available-at">At · [ Event Name ]</div>
+    </div>
+
+    <!-- BAG 2 -->
+    <div class="product">
+      <div class="img-area">
+        <div class="status-tag">Available</div>
+        <span>Photo</span>
+      </div>
+      <h2>[ Bag Name ]</h2>
+      <div class="meta">
+        <span>[ Style ]</span>
+        <span class="price">$[ price ]</span>
+      </div>
+      <p class="desc">[ Short description. ]</p>
+      <div class="available-at">At · [ Event Name ]</div>
+    </div>
+
+    <!-- BAG 3 — example of a sold bag (dark badge, "Found a home" footer) -->
+    <div class="product">
+      <div class="img-area">
+        <!-- change "status-tag" to "status-tag sold" to mark a bag as sold -->
+        <div class="status-tag sold">Sold</div>
+        <span>Photo</span>
+      </div>
+      <h2>[ Bag Name ]</h2>
+      <div class="meta">
+        <span>[ Style ]</span>
+        <span class="price">$[ price ]</span>
+      </div>
+      <p class="desc">[ Short description. ]</p>
+      <div class="available-at">Found a home ✦</div>
+    </div>
+
+    <!-- copy any product block above to add more bags -->
+
+  </div>
 </main>
 
 <footer>
@@ -137,55 +184,5 @@
   <a href="admin.html" style="font-size:0.6rem;letter-spacing:0.2em;color:var(--line);text-decoration:none;text-transform:uppercase;transition:color 0.2s;" onmouseover="this.style.color='var(--muted)'" onmouseout="this.style.color='var(--line)'">Admin</a>
 </footer>
 
-
-<script>
-  const grid = document.getElementById('productsGrid');
-
-  async function loadProducts() {
-    try {
-      const res      = await fetch('http://localhost:8000/api/products');
-      const products = await res.json();
-
-      if (!products.length) {
-        grid.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:0.9rem;grid-column:1/-1;text-align:center;">No products available yet. Check back soon.</p>';
-        return;
-      }
-
-      products.forEach(function(p) {
-        const isSold = p.status === 'sold';
-
-        const imgContent = p.imageUrl
-          ? '<img src="' + p.imageUrl + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;">' 
-          : '<span>Photo</span>';
-
-        const availableAt = isSold
-          ? 'Found a home ✦'
-          : 'At · ' + (p.event || 'Next Event');
-
-        const card = document.createElement('div');
-        card.className = 'product';
-        card.innerHTML =
-          '<div class="img-area">' +
-            '<div class="status-tag' + (isSold ? ' sold' : '') + '">' + (isSold ? 'Sold' : 'Available') + '</div>' +
-            imgContent +
-          '</div>' +
-          '<h2>' + p.name + '</h2>' +
-          '<div class="meta">' +
-            '<span>' + (p.style || '') + '</span>' +
-            '<span class="price">$' + p.price + '</span>' +
-          '</div>' +
-          '<p class="desc">' + (p.description || '') + '</p>' +
-          '<div class="available-at">' + availableAt + '</div>';
-
-        grid.appendChild(card);
-      });
-
-    } catch (err) {
-      grid.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:0.9rem;grid-column:1/-1;text-align:center;">Could not load products. Please try again later.</p>';
-    }
-  }
-
-  loadProducts();
-</script>
 </body>
 </html>

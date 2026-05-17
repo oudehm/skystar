@@ -9,7 +9,7 @@
   /* smooth scrolling when clicking anchor links */
   html { scroll-behavior: smooth; }
 
-  /* ── HEADER — fixed, starts invisible, fades in on scroll ── */
+  /* ── HEADER — fixed, transparent until brand arrives ── */
   header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -23,30 +23,24 @@
     transition: background 0.5s ease, border-color 0.5s ease;
     pointer-events: none;
   }
-  header.scrolled {
+  /* background bar fades in once brand is halfway to the corner */
+  header.bg-in {
     background: var(--green-soft);
     border-bottom-color: var(--line);
     pointer-events: all;
   }
 
-  /* logo inside the header — hidden until scrolled */
-  .logo-wrap {
+  /* the header's own text logo is hidden — the animated brand replaces it */
+  header .logo-wrap { display: none; }
+
+  /* nav starts invisible, fades in once brand has landed in the corner */
+  nav {
     opacity: 0;
+    margin-left: auto; /* push nav to the right side of the header */
     transform: translateY(-6px);
     transition: opacity 0.4s ease, transform 0.4s ease;
   }
-  header.scrolled .logo-wrap {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* nav — hidden until scrolled */
-  nav {
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 0.4s ease 0.08s, transform 0.4s ease 0.08s;
-  }
-  header.scrolled nav {
+  header.nav-in nav {
     opacity: 1;
     transform: translateY(0);
   }
@@ -63,20 +57,21 @@
     padding: 40px 20px;
   }
 
-  /* wrapper that holds the logo + flower side by side */
+  /* wrapper that holds the logo + flower side by side —
+     position:fixed lets JS move it from the splash center to the header corner */
   .splash-brand-wrap {
     display: flex;
     align-items: center;
     gap: 28px;
-    margin-bottom: 30px;
-    animation: fadeIn 1.2s ease-out; /* fades in on load */
-    will-change: transform, opacity;
+    position: fixed;
+    transform-origin: top left;
+    z-index: 200; /* above the header bar */
   }
 
   /* the giant "Skystar" script text */
   .splash-brand {
     font-family: var(--script);
-    font-size: clamp(5rem, 16vw, 12rem); /* scales with screen width */
+    font-size: clamp(6rem, 18vw, 14rem); /* scales with screen width */
     color: var(--ink);
     line-height: 1;
     display: inline-flex;
@@ -91,7 +86,6 @@
     height: clamp(160px, 24vw, 320px);
     object-fit: contain;
     opacity: 0.85;
-    animation: fadeIn 1.6s ease-out; /* fades in slightly after the text */
   }
 
   /* the "Enter ↓" arrow at the bottom of the splash */
@@ -163,7 +157,7 @@
     height: 100%;
     object-fit: contain;
   }
-  /* the large "Reuse the past." quote */
+  /* the large "Reuse the past" quote */
   .recycle-tagline {
     font-weight: 300;
     font-size: clamp(2.2rem, 5vw, 3.6rem);
@@ -303,7 +297,7 @@
   <div class="recycle-icon">
     <img src="recycle.png" alt="Floral recycle symbol">
   </div>
-  <h1 class="recycle-tagline">Reuse the past.<br><em>Carry the future.</em></h1>
+  <h1 class="recycle-tagline">Reuse the past,<br><em>carry the future.</em></h1>
 </section>
 
 <!-- gallery and about section -->
@@ -349,6 +343,7 @@
 <footer>
   <div>© 2026 <span class="script">Skystar</span></div>
   <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
+  <a href="admin.html" style="font-size:0.6rem;letter-spacing:0.2em;color:var(--line);text-decoration:none;text-transform:uppercase;transition:color 0.2s;" onmouseover="this.style.color='var(--muted)'" onmouseout="this.style.color='var(--line)'">Admin</a>
 </footer>
 
 <script>
@@ -357,35 +352,60 @@
   const scrollCue = document.getElementById('scrollCue');
   const splash    = document.querySelector('.splash');
 
+  // Where the brand lands in the header (matches header padding-left and vertical center)
+  const FINAL_LEFT  = 60;
+  const FINAL_TOP   = 2;
+  const FINAL_SCALE = 0.2;
+
+  let startLeft = 0;
+  let startTop  = 0;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // Ease-out cubic — fast start, gentle deceleration into the corner
+  function easeOut(t) { return 1 - Math.pow(1 - Math.min(t, 1), 3); }
+
+  // Measure brand's natural (untransformed) size using offsetWidth/Height,
+  // which are unaffected by CSS transforms, then compute the centered start position.
+  function measureStart() {
+    startLeft = (window.innerWidth  - brand.offsetWidth)  / 2;
+    startTop  = (window.innerHeight - brand.offsetHeight) / 2;
+  }
+
+  function applyBrand(progress) {
+    const e = easeOut(progress);
+    brand.style.left      = lerp(startLeft, FINAL_LEFT,  e) + 'px';
+    brand.style.top       = lerp(startTop,  FINAL_TOP,   e) + 'px';
+    brand.style.transform = 'scale(' + lerp(1, FINAL_SCALE, e) + ')';
+  }
+
   function onScroll() {
-    const scrollY  = window.scrollY;
-    const splashH  = splash.offsetHeight;
+    const progress = Math.min(window.scrollY / splash.offsetHeight, 1);
 
-    // 0 at top of splash, 1 when fully scrolled past
-    const progress = Math.min(scrollY / splashH, 1);
+    applyBrand(progress);
 
-    // ── Shrink + drift brand toward top-left (where header logo lives) ──
-    const scale = 1 - progress * 0.78;
-
-    const vw = window.innerWidth;
-    const vh = splash.offsetHeight;
-    const destX = -(vw / 2 - 80);   // 80px matches header left padding
-    const destY = -(vh / 2 - 36);   // 36px ≈ header vertical center
-
-    brand.style.transform = `translate(${destX * progress}px, ${destY * progress}px) scale(${scale})`;
-
-    // fade brand out in the final 20% of scroll
-    brand.style.opacity = progress > 0.8 ? String(1 - (progress - 0.8) / 0.2) : '1';
-
-    // ── Header fades in at 60% progress ──
-    header.classList.toggle('scrolled', progress > 0.6);
-
-    // ── Hide Enter cue once scrolling starts ──
-    scrollCue.classList.toggle('hidden', scrollY > 30);
+    // Header background bar appears once brand is halfway to the corner
+    header.classList.toggle('bg-in',  progress > 0.5);
+    // Nav links fade in once brand has nearly reached its final position
+    header.classList.toggle('nav-in', progress > 0.85);
+    // Hide the scroll cue as soon as the user starts scrolling
+    scrollCue.classList.toggle('hidden', window.scrollY > 30);
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); // run once on load
+
+  // Recalculate start position if the viewport is resized
+  window.addEventListener('resize', function() {
+    measureStart();
+    onScroll();
+  });
+
+  // Wait for the custom font to load before measuring — the cursive font
+  // changes the brand's rendered width vs the fallback font
+  document.fonts.ready.then(function() {
+    measureStart();
+    onScroll();
+  });
 </script>
 
 </body>

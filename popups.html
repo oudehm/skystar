@@ -65,7 +65,10 @@
 <!-- nav bar -->
 <header>
   <div class="logo-wrap">
-    <div class="logo">Skystar</div>
+    <div class="logo-row">
+      <div class="logo">Skystar</div>
+      <img class="header-flower" src="flowers.png" alt="">
+    </div>
     <div class="tagline">Handmade · Est. 2026</div>
   </div>
   <nav>
@@ -87,59 +90,69 @@
     <p>Come visit. Try the bags in person.</p>
   </div>
 
-  <!-- list of events — each block is one event row -->
-  <div class="events-list">
+  <!-- event rows are injected here by the script below -->
+  <div class="events-list" id="eventsList"></div>
 
-    <!-- EVENT 1 — fill in the month, day, name, venue, and times -->
-    <div class="event">
-      <div class="date">
-        <div class="month">[ Mon ]</div>
-        <div class="day">[ 00 ]</div>
-      </div>
-      <div>
-        <h3>[ Market or event name ]</h3>
-        <div class="details">[ Venue / address ] <span class="sep">·</span> [ start ] – [ end ]</div>
-      </div>
-      <div class="status">RSVP</div>
-    </div>
-
-    <!-- EVENT 2 -->
-    <div class="event">
-      <div class="date">
-        <div class="month">[ Mon ]</div>
-        <div class="day">[ 00 ]</div>
-      </div>
-      <div>
-        <h3>[ Market or event name ]</h3>
-        <div class="details">[ Venue / address ] <span class="sep">·</span> [ start ] – [ end ]</div>
-      </div>
-      <div class="status">RSVP</div>
-    </div>
-
-    <!-- EVENT 3 -->
-    <div class="event">
-      <div class="date">
-        <div class="month">[ Mon ]</div>
-        <div class="day">[ 00 ]</div>
-      </div>
-      <div>
-        <h3>[ Market or event name ]</h3>
-        <div class="details">[ Venue / address ] <span class="sep">·</span> [ start ] – [ end ]</div>
-      </div>
-      <div class="status">RSVP</div>
-    </div>
-
-    <!-- copy a full <div class="event">...</div> block above to add more events -->
-
-  </div>
-
-  <p class="empty-note">More dates announced on Instagram.</p>
+  <!-- shown when the API returns no events, or on error -->
+  <p class="empty-note" id="emptyNote">More dates announced on Instagram.</p>
 </main>
 
 <footer>
   <div>© 2026 <span class="script">Skystar</span></div>
   <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
+  <a href="admin.html" style="font-size:0.6rem;letter-spacing:0.2em;color:var(--line);text-decoration:none;text-transform:uppercase;transition:color 0.2s;" onmouseover="this.style.color='var(--muted)'" onmouseout="this.style.color='var(--line)'">Admin</a>
 </footer>
+
+<script>
+  const list      = document.getElementById('eventsList');
+  const emptyNote = document.getElementById('emptyNote');
+
+  /* hide the empty note by default — show it only if there's nothing to display */
+  emptyNote.style.display = 'none';
+
+  async function loadEvents() {
+    try {
+      const res    = await fetch('http://localhost:8000/api/events');
+      const events = await res.json();
+
+      if (!events.length) {
+        emptyNote.style.display = 'block';
+        return;
+      }
+
+      events.forEach(function(ev) {
+        /* parse the date field to extract a short month name and numeric day */
+        const d     = new Date(ev.date);
+        const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+        const day   = d.getDate();
+
+        const row = document.createElement('div');
+        row.className = 'event';
+        row.innerHTML =
+          '<div class="date">' +
+            '<div class="month">' + month + '</div>' +
+            '<div class="day">'   + day   + '</div>' +
+          '</div>' +
+          '<div>' +
+            '<h3>' + ev.name + '</h3>' +
+            '<div class="details">' + ev.venue +
+              ' <span class="sep">·</span> ' + ev.startTime + ' – ' + ev.endTime +
+            '</div>' +
+          '</div>' +
+          '<div class="status">RSVP</div>';
+
+        list.appendChild(row);
+      });
+
+    } catch (err) {
+      /* network or parse error — fall back to the empty note */
+      emptyNote.textContent  = 'Could not load events. Check back soon or find us on Instagram.';
+      emptyNote.style.display = 'block';
+    }
+  }
+
+  loadEvents();
+</script>
 
 </body>
 </html>

@@ -31,7 +31,7 @@ body {
 /* ── Header (nav bar at the top of every page) ── */
 header {
   background: var(--green-soft);
-  padding: 22px 60px;
+  padding: 22px 40px;
   display: flex;
   justify-content: space-between; /* logo on left, nav on right */
   align-items: center;
@@ -135,6 +135,21 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   margin-right: auto;
 }
 
+
+/* ── Header logo row: Skystar text + bouquet side by side ── */
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* small gap between the script text and the flower */
+}
+/* the small bouquet next to the header logo — sized to match the
+   animated brand's landed scale on the home page (320px × 0.2 = 64px) */
+.header-flower {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.85;
+}
 /* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
   header { padding: 16px 24px; flex-direction: column; gap: 14px; align-items: center; }
