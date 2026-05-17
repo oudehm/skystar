@@ -45,6 +45,52 @@
     transform: translateY(0);
   }
 
+
+  /* ── Next pop-up banner (sits between splash and recycle-hero) ── */
+  .next-popup-banner {
+    display: none; /* shown by JS when an upcoming event exists */
+    background: var(--green-soft);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 40px;
+    text-align: center;
+  }
+  .next-popup-banner a {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .next-popup-banner a:hover { color: var(--accent); }
+
+  /* ── Mobile (≤ 768px): skip scroll animation, static centered splash ── */
+  @media (max-width: 768px) {
+    /* brand reverts to normal flow so it centres inside the flex splash */
+    .splash-brand-wrap {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      transform: none !important;
+      z-index: auto !important;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .splash-brand { font-size: clamp(3.5rem, 16vw, 6rem); }
+    .splash-flowers { width: clamp(100px, 35vw, 180px); height: clamp(100px, 35vw, 180px); }
+    /* header shows normally on mobile — no fixed/transparent treatment */
+    header {
+      position: static !important;
+      background: var(--green-soft) !important;
+      border-bottom-color: var(--line) !important;
+      pointer-events: all !important;
+    }
+    header .logo-wrap { visibility: visible !important; }
+    header nav { opacity: 1 !important; transform: none !important; margin-left: 0 !important; }
+  }
+
   /* ── Splash (the big green landing screen) ── */
   .splash {
     min-height: 100vh; /* fills the whole screen */
@@ -291,6 +337,11 @@
   </nav>
 </header>
 
+<!-- next upcoming pop-up callout — populated by JS -->
+<div class="next-popup-banner" id="nextPopupBanner">
+  <a href="popups.html" id="nextPopupLink"></a>
+</div>
+
 <!-- big recycle icon + "Reuse the past" quote -->
 <section class="recycle-hero" id="site">
   <div class="recycle-icon">
@@ -363,6 +414,36 @@
   brand.style.transform = '';
   brand.style.opacity   = '1';
 
+  // ── Mobile: skip animation entirely ────────────────────────────────────────
+  // On small screens the fixed-brand animation doesn't work well. We detect
+  // mobile once at load time; if true we show the header immediately and skip
+  // all scroll listeners. The CSS @media block handles the visual side.
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    header.classList.add('bg-in', 'nav-in');
+  }
+
+  // ── Next pop-up banner ───────────────────────────────────────────────────
+  async function loadNextPopup() {
+    try {
+      const res    = await fetch('https://skystar-backend.onrender.com/api/events');
+      const events = await res.json();
+      const today  = new Date();
+      today.setHours(0, 0, 0, 0);
+      const upcoming = events
+        .filter(function(e) { return new Date(e.date) >= today; })
+        .sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
+      if (upcoming.length) {
+        const next = upcoming[0];
+        const d    = new Date(next.date);
+        const fmt  = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+        document.getElementById('nextPopupLink').textContent = 'Next pop-up: ' + next.name + ' · ' + fmt;
+        document.getElementById('nextPopupBanner').style.display = 'block';
+      }
+    } catch {}
+  }
+  loadNextPopup();
+
   // Final landing values — computed from the DOM so they always match
   // the real header layout on inventory/popups/etc.
   let FINAL_LEFT  = 60;
@@ -428,22 +509,23 @@
     scrollCue.classList.toggle('hidden', window.scrollY > 30);
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  // Only run the scroll animation on desktop (≥ 768px)
+  if (!isMobile) {
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-  // On resize, unlock and re-measure so the landing position stays correct
-  // if the viewport or font rendering changes.
-  window.addEventListener('resize', function() {
-    locked = false;
-    measureAll();
-    onScroll();
-  });
+    window.addEventListener('resize', function() {
+      if (window.innerWidth >= 768) {
+        locked = false;
+        measureAll();
+        onScroll();
+      }
+    });
 
-  // Wait for the custom font before measuring — Great Vibes renders wider
-  // than the fallback, so measuring before it loads gives wrong coordinates.
-  document.fonts.ready.then(function() {
-    measureAll();
-    onScroll();
-  });
+    document.fonts.ready.then(function() {
+      measureAll();
+      onScroll();
+    });
+  }
 </script>
 
 </body>

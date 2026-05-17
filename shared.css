@@ -149,6 +149,57 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   top: 0.14em;
   display: inline-block;
 }
+
+
+/* ── Splash brand markup reused in headers on all non-index pages ──
+   These rules define the large element; header .splash-brand-wrap
+   zooms it down to the exact final scale of the index.html animation. */
+.splash-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.splash-brand {
+  font-family: var(--script);
+  font-size: clamp(6rem, 18vw, 14rem);
+  color: var(--ink);
+  line-height: 1;
+  display: inline-flex;
+  align-items: flex-start;
+  white-space: nowrap; /* prevent wrapping at the large natural size */
+}
+.splash-brand .star {
+  position: relative;
+  top: 0.14em;
+}
+.splash-flowers {
+  width: clamp(160px, 24vw, 320px);
+  height: clamp(160px, 24vw, 320px);
+  object-fit: contain;
+  opacity: 0.85;
+}
+/* zoom: 0.2 scales both the visual rendering AND the layout box —
+   the header height automatically matches what index.html shows after scroll.
+   zoom: 0.2 = FINAL_SCALE (2.8rem ÷ 14rem splash font = 0.2) */
+header .splash-brand-wrap {
+  zoom: 0.2;
+  flex-shrink: 0;
+  gap: 140px; /* 140px × zoom:0.2 = 28px visual gap — matches index.html's locked state */
+  align-items: center; /* vertically center text and bouquet the same way index.html does */
+}
+
+/* ── Skeleton shimmer (used on inventory + events while data loads) ── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-slab {
+  background: linear-gradient(90deg, var(--cream) 0%, var(--pink-soft) 50%, var(--cream) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 0;
+}
+
 /* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
   header { padding: 16px 24px; } /* row layout — logo left, nav right at all sizes */

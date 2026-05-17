@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Skystar</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { display: flex; flex-direction: column; }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 40px;
+  }
+
+  .not-found {
+    text-align: center;
+    max-width: 520px;
+  }
+
+  .not-found .eyebrow { margin-bottom: 20px; }
+
+  .not-found h1 {
+    font-weight: 300;
+    font-size: 2.6rem;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .not-found h1 em { font-style: italic; color: var(--accent); }
+
+  .not-found p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 400px;
+    margin: 0 auto 32px;
+  }
+
+  .back-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--ink);
+    color: var(--pink-soft);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .back-btn:hover { background: var(--accent); }
+
+  @media (max-width: 900px) {
+    .not-found h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="splash-brand-wrap">
+    <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
+    <img class="splash-flowers" src="flowers.png" alt="Floral bouquet">
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="inventory.html">Lookbook</a></li>
+      <li><a href="popups.html">Events</a></li>
+      <li><a href="interest.html">Request</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="not-found">
+    <div class="eyebrow">404</div>
+    <h1>This page got <em>rehomed.</em></h1>
+    <p>The page you're looking for doesn't exist. Head back to the lookbook to see what's new.</p>
+    <a href="inventory.html" class="back-btn">Visit the Lookbook</a>
+  </div>
+</main>
+
+<footer>
+  <div>© 2026 <span class="script">Skystar</span></div>
+  <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
+</footer>
+
+</body>
+</html>
