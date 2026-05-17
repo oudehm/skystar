@@ -16,7 +16,7 @@
     z-index: 100;
     background: transparent;
     border-bottom: 1px solid transparent;
-    padding: 22px 60px;
+    padding: 22px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,7 +31,7 @@
   }
 
   /* the header's own text logo is hidden — the animated brand replaces it */
-  header .logo-wrap { display: none; }
+  header .logo-wrap { visibility: hidden; } /* keeps header height matching other pages */
 
   /* nav starts invisible, fades in once brand has landed in the corner */
   nav {
@@ -279,7 +279,6 @@
 <header id="siteHeader">
   <div class="logo-wrap">
     <div class="logo">Skystar</div>
-    <div class="tagline">Handmade · Est. 2026</div>
   </div>
   <nav>
     <ul>
@@ -347,29 +346,56 @@
 </footer>
 
 <script>
+  // Force scroll to top on every page load so animation always plays from start
+  history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   const header    = document.getElementById('siteHeader');
   const brand     = document.getElementById('splashBrand');
   const scrollCue = document.getElementById('scrollCue');
   const splash    = document.querySelector('.splash');
 
-  // Where the brand lands in the header (matches header padding-left and vertical center)
-  const FINAL_LEFT  = 60;
-  const FINAL_TOP   = 2;
-  const FINAL_SCALE = 0.2;
+  // Reset any stale inline styles the browser may have preserved from a
+  // previous visit (e.g. navigating back), so the brand starts fresh.
+  brand.style.position  = '';
+  brand.style.top       = '';
+  brand.style.left      = '';
+  brand.style.transform = '';
+  brand.style.opacity   = '1';
+
+  // Final landing values — computed from the DOM so they always match
+  // the real header layout on inventory/popups/etc.
+  let FINAL_LEFT  = 60;
+  let FINAL_TOP   = 22;
+  let FINAL_SCALE = 0.2;
 
   let startLeft = 0;
   let startTop  = 0;
+  let locked    = false; // once true, brand never moves regardless of scroll direction
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
   // Ease-out cubic — fast start, gentle deceleration into the corner
   function easeOut(t) { return 1 - Math.pow(1 - Math.min(t, 1), 3); }
 
-  // Measure brand's natural (untransformed) size using offsetWidth/Height,
-  // which are unaffected by CSS transforms, then compute the centered start position.
-  function measureStart() {
+  function measureAll() {
+    // ── Start position: brand centered in the viewport ──────────────────────
+    // offsetWidth/Height are layout dimensions unaffected by CSS transforms
     startLeft = (window.innerWidth  - brand.offsetWidth)  / 2;
     startTop  = (window.innerHeight - brand.offsetHeight) / 2;
+
+    // ── Final scale: splash text must render at exactly 2.8rem ──────────────
+    // Use getComputedStyle on both the splash element and the document root so
+    // the ratio stays correct at any viewport size or browser font setting.
+    const splashFontPx = parseFloat(window.getComputedStyle(document.querySelector('.splash-brand')).fontSize);
+    const rootFontPx   = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    FINAL_SCALE = (2.8 * rootFontPx) / splashFontPx;
+
+    // ── Final left and top: match the header's padding exactly ────────────────
+    // left: 40px = header padding-left; top: 22px = header padding-top.
+    // With transform-origin: top left the brand anchors from its top-left corner.
+    FINAL_LEFT = 40;
+    FINAL_TOP  = 22;
   }
 
   function applyBrand(progress) {
@@ -382,7 +408,17 @@
   function onScroll() {
     const progress = Math.min(window.scrollY / splash.offsetHeight, 1);
 
-    applyBrand(progress);
+    if (!locked) {
+      applyBrand(progress);
+      // Once the animation completes, snap to the exact computed position
+      // and lock — the brand never moves again even if the user scrolls back up.
+      if (progress >= 1) {
+        brand.style.left      = FINAL_LEFT  + 'px';
+        brand.style.top       = FINAL_TOP   + 'px';
+        brand.style.transform = 'scale(' + FINAL_SCALE + ')';
+        locked = true;
+      }
+    }
 
     // Header background bar appears once brand is halfway to the corner
     header.classList.toggle('bg-in',  progress > 0.5);
@@ -394,16 +430,18 @@
 
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // Recalculate start position if the viewport is resized
+  // On resize, unlock and re-measure so the landing position stays correct
+  // if the viewport or font rendering changes.
   window.addEventListener('resize', function() {
-    measureStart();
+    locked = false;
+    measureAll();
     onScroll();
   });
 
-  // Wait for the custom font to load before measuring — the cursive font
-  // changes the brand's rendered width vs the fallback font
+  // Wait for the custom font before measuring — Great Vibes renders wider
+  // than the fallback, so measuring before it loads gives wrong coordinates.
   document.fonts.ready.then(function() {
-    measureStart();
+    measureAll();
     onScroll();
   });
 </script>

@@ -49,14 +49,6 @@ header {
   color: var(--ink);
   line-height: 1;
 }
-/* the small "Handmade · Est. 2026" text below the logo */
-.tagline {
-  font-size: 0.65rem;
-  letter-spacing: 0.35em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: 5px;
-}
 
 /* ── Navigation links ── */
 nav ul { list-style: none; display: flex; gap: 32px; }
@@ -150,9 +142,16 @@ footer .divider { color: var(--accent); margin: 0 14px; }
   object-fit: contain;
   opacity: 0.85;
 }
+
+/* drops "star" slightly below "Sky" to match the splash logo treatment */
+.logo .star {
+  position: relative;
+  top: 0.14em;
+  display: inline-block;
+}
 /* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
-  header { padding: 16px 24px; flex-direction: column; gap: 14px; align-items: center; }
+  header { padding: 16px 24px; } /* row layout — logo left, nav right at all sizes */
   nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
   footer { padding: 14px 24px; flex-direction: column; gap: 6px; text-align: center; }
   .page-header h1 { font-size: 1.8rem; }
