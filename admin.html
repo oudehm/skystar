@@ -1000,6 +1000,7 @@
             <div class="request-name">${r.firstName} ${r.lastName}</div>
             <div class="request-email">${r.email}</div>
             <div class="request-msg">${r.message || '—'}</div>
+            ${r.inspoImage ? `<img src="${r.inspoImage}" alt="Inspo" style="max-width:160px;max-height:160px;object-fit:cover;margin-top:8px;display:block;">` : ''}
             <div class="request-date">${new Date(r.submittedAt || r.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
           </div>
           <div class="request-actions">

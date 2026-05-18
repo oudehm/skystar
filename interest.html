@@ -357,11 +357,14 @@
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending…";
 
+    const inspoImage = await readFileAsBase64(fileInput.files[0]);
+
     const entry = {
       firstName,
       lastName,
       email,
       message,
+      inspoImage,
     };
 
     try {
