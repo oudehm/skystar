@@ -4,25 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Skystar</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <style>
   :root {
-    --pink-soft: #fdf1f4;
-    --green: #ecf7e9;
-    --green-soft: #ecf7e9;
-    --cream: #fdfaf6;
-    --ink: #344628;
-    --muted: #7a7373;
-    --line: #e8dcd8;
-    --accent: #de87a3;
-    --red: #b54a4a;
-    --script: 'Great Vibes', cursive;
+    --red: #b54a4a; /* admin-only danger color */
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     background: var(--pink-soft);
     color: var(--ink);
     font-weight: 300;
@@ -81,7 +72,7 @@
     border: none;
     border-bottom: 1px solid var(--line);
     padding: 8px 0;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.95rem;
     color: var(--ink);
     font-weight: 300;
@@ -94,7 +85,7 @@
     background: var(--ink);
     color: var(--pink-soft);
     border: none;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.75rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -128,22 +119,27 @@
   .dash-header {
     background: var(--green-soft);
     border-bottom: 1px solid var(--line);
-    padding: 18px 50px;
+    padding: 22px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
   }
-  .dash-header .brand { display: flex; flex-direction: column; }
-  .dash-header .logo { font-family: var(--script); font-size: 2.6rem; color: var(--ink); line-height: 1; }
-  .dash-header .tagline { font-size: 0.6rem; letter-spacing: 0.35em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+  /* clickable logo block: wordmark + flower, matching inner-page logo-row */
+  .dash-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+  }
   .dash-header .header-right { display: flex; align-items: center; gap: 24px; }
   .dash-header .admin-label { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
   .logout-btn {
     background: transparent;
     border: 1px solid var(--line);
     color: var(--ink);
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.68rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
@@ -175,7 +171,7 @@
     border-top: none;
     border-left: none;
     border-right: none;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
   }
   .tab:hover { color: var(--ink); }
   .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
@@ -238,7 +234,7 @@
     border: none;
     border-bottom: 1px solid var(--line);
     padding: 8px 0;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.95rem;
     color: var(--ink);
     font-weight: 300;
@@ -299,7 +295,7 @@
   .card-actions button {
     flex: 1;
     padding: 8px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -333,7 +329,7 @@
   .event-actions { display: flex; gap: 8px; }
   .event-actions button {
     padding: 6px 14px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -364,7 +360,7 @@
   .request-date { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 10px; }
   .request-actions button {
     padding: 6px 14px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Fraunces', serif;
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -474,7 +470,7 @@
   }
 
   @media (max-width: 900px) {
-    .dash-header { padding: 14px 20px; }
+    .dash-header { padding: 16px 24px; }
     .dash-tabs { padding: 0 20px; }
     .dash-body { padding: 30px 20px; }
     .products-grid { grid-template-columns: repeat(2, 1fr); }
@@ -510,12 +506,12 @@
 
   <!-- header -->
   <div class="dash-header">
-    <div class="brand">
-      <div class="logo">Skystar</div>
-      <div class="tagline">Admin Dashboard</div>
-    </div>
+    <a href="index.html" class="dash-logo-link">
+      <div class="logo">Sky<span class="star">star</span></div>
+      <img class="header-flower" src="flowers.png" alt="Floral bouquet">
+    </a>
     <div class="header-right">
-      <span class="admin-label">Admin</span>
+      <span class="admin-label">Admin Dashboard</span>
       <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
   </div>

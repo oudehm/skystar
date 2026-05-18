@@ -529,7 +529,12 @@
         brand.style.left      = FINAL_LEFT  + 'px';
         brand.style.top       = FINAL_TOP   + 'px';
         brand.style.transform = 'scale(' + FINAL_SCALE + ')';
-        siteFloor = document.getElementById('site').offsetTop;
+        var bannerEl = document.getElementById('nextPopupBanner');
+        var siteEl   = document.getElementById('site');
+        siteFloor = (window.getComputedStyle(bannerEl).display !== 'none')
+          ? bannerEl.offsetTop
+          : siteEl.offsetTop;
+        console.log('[Skystar scroll floor] nextPopupBanner.offsetTop:', bannerEl.offsetTop, '| siteFloor:', siteFloor);
         locked = true;
       }
     }
