@@ -1,5 +1,5 @@
 /* pulls in the "Great Vibes" cursive font from Google */
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Great+Vibes&display=swap');
 
 /* ── Global color + font variables ──
    Change a value here and it updates everywhere on the site */
@@ -8,21 +8,44 @@
   --pink-soft: #fdf1f4;     /* very light pink — main page background */
   --green: #ecf7e9;         /* soft green — used for splash + header/footer */
   --green-soft: #ecf7e9;
-  --green-deep: #ecf7e9;
+  --green-deep: #2D4A26;    /* deep forest green — power moments */
+  --green-mid: #c4debc;     /* mid sage green — borders in green zones */
+  --green-ink: #1C3318;     /* near-black green — high-contrast moments */
+  --pink-mid: #f5c5d8;      /* mid pink — card borders, accents */
   --cream: #fdfaf6;         /* off-white — used for cards and photo placeholders */
   --ink: #344628;           /* dark green — main text color */
   --muted: #7a7373;         /* grey — secondary/caption text */
   --line: #e8dcd8;          /* dusty rose — borders and dividers */
   --accent: #de87a3;        /* dusty rose — used for labels, highlights */
   --script: 'Great Vibes', cursive; /* the fancy cursive font for "Skystar" */
+  /* type scale */
+  --text-xs:   0.72rem;
+  --text-sm:   0.9rem;
+  --text-base: 1.1rem;
+  --text-lg:   1.4rem;
+  --text-xl:   2rem;
+  --text-2xl:  2.8rem;
+  --text-3xl:  clamp(3rem, 6vw, 5rem);
 }
 
 /* removes default spacing and makes sizing predictable on all elements */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* grain texture overlay — gives pages a subtle paper feel at zero load cost */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
 /* base styles applied to every page */
 body {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Fraunces', serif;
   background: var(--pink-soft);
   color: var(--ink);
   font-weight: 300; /* light weight for an editorial feel */
@@ -33,10 +56,12 @@ header {
   background: var(--green-soft);
   padding: 22px 40px;
   display: flex;
-  justify-content: space-between; /* logo on left, nav on right */
+  justify-content: flex-end; /* logo-row is absolute on inner pages; nav sits at the right */
   align-items: center;
   border-bottom: 1px solid var(--line);
-  flex-shrink: 0; /* prevents header from shrinking on small screens */
+  flex-shrink: 0;
+  position: relative;
+  min-height: calc(44px + 2.8rem); /* 2×22px padding + 2.8rem logo = index.html's header height */
 }
 /* stacks the "Skystar" logo and "Handmade · Est. 2026" tagline vertically */
 .logo-wrap { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
@@ -128,16 +153,21 @@ footer .divider { color: var(--accent); margin: 0 14px; }
 }
 
 
-/* ── Header logo row: Skystar text + bouquet side by side ── */
+/* ── Header logo row: Skystar text + bouquet side by side ──
+   Absolutely positioned so it never affects the header's layout height —
+   same behaviour as index.html where the brand is position:fixed after animation. */
 .logo-row {
+  position: absolute;
+  top: 22px;  /* = FINAL_TOP on index.html = header padding-top */
+  left: 40px; /* = FINAL_LEFT on index.html = header padding-left */
   display: flex;
   align-items: center;
-  gap: 8px; /* small gap between the script text and the flower */
+  gap: 6px; /* splash gap 28px × FINAL_SCALE 0.2 = 5.6px → rounded to 6px */
 }
-/* the small bouquet next to the header logo — sized to match the
-   animated brand's landed scale on the home page (320px × 0.2 = 64px) */
+/* clamp(160px,24vw,320px) × FINAL_SCALE 0.2 = clamp(32px,4.8vw,64px) —
+   the exact rendered size of splash-flowers after the index.html animation locks */
 .header-flower {
-  height: 56px;
+  height: clamp(32px, 4.8vw, 64px);
   width: auto;
   object-fit: contain;
   opacity: 0.85;
@@ -170,22 +200,13 @@ footer .divider { color: var(--accent); margin: 0 14px; }
 }
 .splash-brand .star {
   position: relative;
-  top: 0.14em;
+  top: 0.10em;
 }
 .splash-flowers {
   width: clamp(160px, 24vw, 320px);
   height: clamp(160px, 24vw, 320px);
   object-fit: contain;
   opacity: 0.85;
-}
-/* zoom: 0.2 scales both the visual rendering AND the layout box —
-   the header height automatically matches what index.html shows after scroll.
-   zoom: 0.2 = FINAL_SCALE (2.8rem ÷ 14rem splash font = 0.2) */
-header .splash-brand-wrap {
-  zoom: 0.2;
-  flex-shrink: 0;
-  gap: 140px; /* 140px × zoom:0.2 = 28px visual gap — matches index.html's locked state */
-  align-items: center; /* vertically center text and bouquet the same way index.html does */
 }
 
 /* ── Skeleton shimmer (used on inventory + events while data loads) ── */
@@ -202,7 +223,8 @@ header .splash-brand-wrap {
 
 /* ── Mobile adjustments (screens under 900px wide) ── */
 @media (max-width: 900px) {
-  header { padding: 16px 24px; } /* row layout — logo left, nav right at all sizes */
+  header { padding: 16px 24px; }
+  .logo-row { top: 16px; left: 24px; } /* track the reduced header padding */
   nav ul { gap: 18px; flex-wrap: wrap; justify-content: center; }
   footer { padding: 14px 24px; flex-direction: column; gap: 6px; text-align: center; }
   .page-header h1 { font-size: 1.8rem; }

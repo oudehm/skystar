@@ -79,7 +79,7 @@
       margin-bottom: 30px;
     }
     .splash-brand { font-size: clamp(3.5rem, 16vw, 6rem); }
-    .splash-flowers { width: clamp(100px, 35vw, 180px); height: clamp(100px, 35vw, 180px); }
+    .splash-flowers { width: clamp(160px, 24vw, 320px); height: clamp(160px, 24vw, 320px); }
     /* header shows normally on mobile — no fixed/transparent treatment */
     header {
       position: static !important;
@@ -229,7 +229,7 @@
     font-style: italic;
     color: var(--accent);
   }
-  .section-intro p { font-size: 1.4rem; font-family: var(--script); color: var(--accent); max-width: 480px; margin: 14px auto 0; line-height: 1.7; }
+  .section-intro p { font-size: 1.1rem; font-style: italic; color: var(--accent); max-width: 480px; margin: 14px auto 0; line-height: 1.7; }
 
   /* 4-column photo grid (drops to 2 on mobile) */
   .gallery {
@@ -293,6 +293,31 @@
   .about-content p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 18px; }
   /* the "— founder" sign-off line */
   .about-content .signoff { font-style: italic; color: var(--accent); margin-top: 24px; font-size: 1.05rem; }
+
+  /* ── CTA row (sits below the about section, above the footer) ── */
+  .cta-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    max-width: 700px;
+    margin: 60px auto 0;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .cta-row a {
+    font-variant: small-caps;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 3px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .cta-row a:hover {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
 
   /* on smaller screens, stack everything vertically */
   @media (max-width: 900px) {
@@ -388,6 +413,11 @@
       <div class="signoff">— [your name], founder</div>
     </div>
   </section>
+
+  <div class="cta-row">
+    <a href="inventory.html">View the Lookbook →</a>
+    <a href="popups.html">Upcoming Events →</a>
+  </div>
 </main>
 
 <footer>
@@ -453,6 +483,8 @@
   let startLeft = 0;
   let startTop  = 0;
   let locked    = false; // once true, brand never moves regardless of scroll direction
+  let siteFloor = 0;    // scroll position of #site — becomes the minimum scrollY after lock
+  let snapping  = false; // true while the snap-back scroll is in flight
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
@@ -497,6 +529,7 @@
         brand.style.left      = FINAL_LEFT  + 'px';
         brand.style.top       = FINAL_TOP   + 'px';
         brand.style.transform = 'scale(' + FINAL_SCALE + ')';
+        siteFloor = document.getElementById('site').offsetTop;
         locked = true;
       }
     }
@@ -507,6 +540,12 @@
     header.classList.toggle('nav-in', progress > 0.85);
     // Hide the scroll cue as soon as the user starts scrolling
     scrollCue.classList.toggle('hidden', window.scrollY > 30);
+    // Once locked, the splash is gone — clamp scrollY so it can never reappear
+    if (locked && !snapping && window.scrollY < siteFloor) {
+      snapping = true;
+      window.scrollTo({ top: siteFloor, behavior: 'smooth' });
+      setTimeout(function() { snapping = false; }, 500);
+    }
   }
 
   // Only run the scroll animation on desktop (≥ 768px)

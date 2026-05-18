@@ -32,7 +32,7 @@
   .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 28px; max-width: 1200px; margin: 0 auto; }
 
   /* individual bag card */
-  .product { display: flex; flex-direction: column; position: relative; }
+  .product { display: flex; flex-direction: column; position: relative; transition: transform 0.3s ease; }
 
   /* the photo box at the top of each card */
   .product .img-area {
@@ -51,8 +51,9 @@
     transition: opacity 0.25s;
     position: relative;
   }
-  /* slight fade when hovering over a bag */
-  .product:hover .img-area { opacity: 0.88; }
+  /* lift + shadow on hover — feels physical, like picking up the bag */
+  .product:hover { transform: translateY(-4px); }
+  .product:hover .img-area { box-shadow: 0 12px 40px rgba(28, 51, 24, 0.12); }
 
   /* "Available" or "Sold" badge overlaid on the top-left of the photo */
   .status-tag {
@@ -96,9 +97,9 @@
 
 <!-- nav bar -->
 <header>
-  <div class="splash-brand-wrap">
-    <div class="splash-brand"><span>Sky</span><span class="star">star</span></div>
-    <img class="splash-flowers" src="flowers.png" alt="Floral bouquet">
+  <div class="logo-row">
+    <div class="logo">Sky<span class="star">star</span></div>
+    <img class="header-flower" src="flowers.png" alt="Floral bouquet">
   </div>
   <nav>
     <ul>
