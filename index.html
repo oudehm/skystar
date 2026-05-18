@@ -529,14 +529,21 @@
         brand.style.left      = FINAL_LEFT  + 'px';
         brand.style.top       = FINAL_TOP   + 'px';
         brand.style.transform = 'scale(' + FINAL_SCALE + ')';
-        var bannerEl = document.getElementById('nextPopupBanner');
-        var siteEl   = document.getElementById('site');
-        siteFloor = (window.getComputedStyle(bannerEl).display !== 'none')
-          ? bannerEl.offsetTop
-          : siteEl.offsetTop;
+        var bannerEl  = document.getElementById('nextPopupBanner');
+        var siteEl    = document.getElementById('site');
+        var headerH   = header.offsetHeight;
+        var targetEl  = (window.getComputedStyle(bannerEl).display !== 'none') ? bannerEl : siteEl;
+        // Subtract header height so the target section's top edge lands just
+        // below the fixed header rather than behind it.
+        siteFloor = targetEl.offsetTop - headerH;
         console.log('[Skystar] nextPopupBanner.offsetTop:', bannerEl.offsetTop);
         console.log('[Skystar] siteFloor (scroll lock minimum):', siteFloor, '— difference:', siteFloor - bannerEl.offsetTop);
-        locked = true;
+        locked   = true;
+        // User is currently at bannerEl.offsetTop (progress just hit 1).
+        // Snap them back up by headerH so the banner is visible below the header.
+        snapping = true;
+        window.scrollTo({ top: siteFloor, behavior: 'smooth' });
+        setTimeout(function() { snapping = false; }, 600);
       }
     }
 
