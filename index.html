@@ -381,16 +381,16 @@
   <!-- small label + heading above the photo grid -->
   <div class="section-intro">
     <div class="eyebrow">Featured</div>
-    <h2>From our <em>haven</em></h2>
-    <p>Each piece is one of a kind, made from well-loved denim.</p>
+    <h2 id="galleryHeading">From our <em>haven</em></h2>
+    <p id="gallerySubtext">Each piece is one of a kind, made from well-loved denim.</p>
   </div>
 
-  <!-- 4 product photo slots (swap placeholders for real images) -->
+  <!-- 4 product photo slots — skeleton shimmer while content loads -->
   <section class="gallery">
-    <div class="photo"><span>Image 01</span></div>
-    <div class="photo"><span>Image 02</span></div>
-    <div class="photo"><span>Image 03</span></div>
-    <div class="photo"><span>Image 04</span></div>
+    <div class="photo skeleton-slab" id="galleryPhoto0"><span>Image 01</span></div>
+    <div class="photo skeleton-slab" id="galleryPhoto1"><span>Image 02</span></div>
+    <div class="photo skeleton-slab" id="galleryPhoto2"><span>Image 03</span></div>
+    <div class="photo skeleton-slab" id="galleryPhoto3"><span>Image 04</span></div>
   </section>
 
   <!-- decorative line break between gallery and story -->
@@ -402,15 +402,14 @@
 
   <!-- about section: portrait photo on the left, text on the right -->
   <section class="about-grid">
-    <div class="about-image"><span>Portrait or studio shot</span></div>
+    <div class="about-image" id="aboutImageWrap"><span>Portrait or studio shot</span></div>
     <div class="about-content">
       <div class="eyebrow">About <span class="script">Skystar</span></div>
-      <h2>Small batch, <em>made slowly.</em></h2>
-      <!-- fill these in with your own story -->
-      <p>[ How Skystar started — the moment the idea sparked, the first bag, what drew you to denim. ]</p>
-      <p>[ Your process — where the fabric comes from, how long a bag takes, the care that goes into each one. ]</p>
-      <p>[ What you hope for the person who carries one. ]</p>
-      <div class="signoff">— [your name], founder</div>
+      <h2 id="aboutHeading">Small batch, <em>made slowly.</em></h2>
+      <p id="aboutParagraph1">[ How Skystar started — the moment the idea sparked, the first bag, what drew you to denim. ]</p>
+      <p id="aboutParagraph2">[ Your process — where the fabric comes from, how long a bag takes, the care that goes into each one. ]</p>
+      <p id="aboutParagraph3">[ What you hope for the person who carries one. ]</p>
+      <div class="signoff" id="aboutSignoff">— Your name, founder</div>
     </div>
   </section>
 
@@ -422,7 +421,7 @@
 
 <footer>
   <div>© 2026 <span class="script">Skystar</span></div>
-  <div>Sacramento, CA <span class="divider">·</span> @[your instagram]</div>
+  <div><span id="footerCity">Sacramento, CA</span> <span class="divider">·</span> <span id="footerInstagram">@yourstagram</span></div>
   <a href="admin.html" style="font-size:0.6rem;letter-spacing:0.2em;color:var(--line);text-decoration:none;text-transform:uppercase;transition:color 0.2s;" onmouseover="this.style.color='var(--muted)'" onmouseout="this.style.color='var(--line)'">Admin</a>
 </footer>
 
@@ -578,6 +577,82 @@
       onScroll();
     });
   }
+
+  // ── Home content — fetch from CMS and populate the page ─────────────────
+  async function loadHomeContent() {
+    try {
+      const res = await fetch('https://skystar-backend.onrender.com/api/home');
+      if (!res.ok) throw new Error('non-200');
+      const d = await res.json();
+
+      // Gallery heading: "Plain <em>italic</em>"
+      var gHead = document.getElementById('galleryHeading');
+      if (gHead && (d.galleryHeadingPlain || d.galleryHeadingItalic)) {
+        gHead.innerHTML = (d.galleryHeadingPlain || '') + ' <em>' + (d.galleryHeadingItalic || '') + '</em>';
+      }
+
+      // Gallery subtext
+      var gSub = document.getElementById('gallerySubtext');
+      if (gSub && d.gallerySubtext) gSub.textContent = d.gallerySubtext;
+
+      // Gallery images — remove skeleton, show photo or numbered placeholder
+      var images = Array.isArray(d.galleryImages) ? d.galleryImages : [];
+      for (var i = 0; i < 4; i++) {
+        var slot = document.getElementById('galleryPhoto' + i);
+        if (!slot) continue;
+        slot.classList.remove('skeleton-slab');
+        var img = images[i];
+        if (img && img.url) {
+          slot.innerHTML = '<img src="' + img.url + '" alt="' + (img.alt || 'Gallery photo ' + (i + 1)) + '" style="width:100%;height:100%;object-fit:cover;">';
+        } else {
+          slot.innerHTML = '<span>Image ' + String(i + 1).padStart(2, '0') + '</span>';
+        }
+      }
+
+      // About heading: "Plain <em>italic</em>"
+      var aHead = document.getElementById('aboutHeading');
+      if (aHead && (d.aboutHeadingPlain || d.aboutHeadingItalic)) {
+        aHead.innerHTML = (d.aboutHeadingPlain || '') + ' <em>' + (d.aboutHeadingItalic || '') + '</em>';
+      }
+
+      // About paragraphs — hide empty ones so layout doesn't have gaps
+      ['aboutParagraph1', 'aboutParagraph2', 'aboutParagraph3'].forEach(function(key) {
+        var el = document.getElementById(key);
+        if (!el) return;
+        if (d[key]) {
+          el.textContent = d[key];
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+
+      // About signoff
+      var signoff = document.getElementById('aboutSignoff');
+      if (signoff && d.aboutSignoff) signoff.textContent = d.aboutSignoff;
+
+      // About portrait — swap placeholder div for the real image
+      var imgWrap = document.getElementById('aboutImageWrap');
+      if (imgWrap && d.aboutImage) {
+        imgWrap.innerHTML = '<img src="' + d.aboutImage + '" alt="Portrait" style="width:100%;height:100%;object-fit:cover;">';
+      }
+
+      // Footer
+      var fCity = document.getElementById('footerCity');
+      if (fCity && d.footerCity) fCity.textContent = d.footerCity;
+      var fInsta = document.getElementById('footerInstagram');
+      if (fInsta && d.footerInstagram) fInsta.textContent = d.footerInstagram;
+
+    } catch (e) {
+      // Fetch failed — remove skeletons so placeholder text shows cleanly
+      for (var i = 0; i < 4; i++) {
+        var slot = document.getElementById('galleryPhoto' + i);
+        if (slot) slot.classList.remove('skeleton-slab');
+      }
+    }
+  }
+
+  loadHomeContent();
 </script>
 
 </body>
