@@ -64,31 +64,23 @@
   }
   .next-popup-banner a:hover { color: var(--accent); }
 
-  /* ── Mobile (≤ 768px): skip scroll animation, static centered splash ── */
+  /* ── Mobile (≤ 768px): scale splash brand for smaller screens ── */
   @media (max-width: 768px) {
-    /* brand reverts to normal flow so it centres inside the flex splash */
-    .splash-brand-wrap {
-      position: static !important;
-      top: auto !important;
-      left: auto !important;
-      transform: none !important;
-      z-index: auto !important;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 30px;
-    }
     .splash-brand { font-size: clamp(3.5rem, 16vw, 6rem); }
     .splash-flowers { width: clamp(160px, 24vw, 320px); height: clamp(160px, 24vw, 320px); }
-    /* header shows normally on mobile — no fixed/transparent treatment */
+  }
+
+  /* ── Mobile (≤ 600px): stacked header — logo centered, nav centered below ── */
+  @media (max-width: 600px) {
     header {
-      position: static !important;
-      background: var(--green-soft) !important;
-      border-bottom-color: var(--line) !important;
-      pointer-events: all !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 14px 20px 10px;
+      min-height: unset;
+      gap: 8px;
     }
-    header .logo-wrap { visibility: visible !important; }
-    header nav { opacity: 1 !important; transform: none !important; margin-left: 0 !important; }
+    nav { margin-left: 0; }
   }
 
   /* ── Splash (the big green landing screen) ── */
@@ -443,14 +435,6 @@
   brand.style.transform = '';
   brand.style.opacity   = '1';
 
-  // ── Mobile: skip animation entirely ────────────────────────────────────────
-  // On small screens the fixed-brand animation doesn't work well. We detect
-  // mobile once at load time; if true we show the header immediately and skip
-  // all scroll listeners. The CSS @media block handles the visual side.
-  const isMobile = window.innerWidth < 768;
-  if (isMobile) {
-    header.classList.add('bg-in', 'nav-in');
-  }
 
   // ── Next pop-up banner ───────────────────────────────────────────────────
   async function loadNextPopup() {
@@ -503,11 +487,15 @@
     const rootFontPx   = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
     FINAL_SCALE = (2.8 * rootFontPx) / splashFontPx;
 
-    // ── Final left and top: match the header's padding exactly ────────────────
-    // left: 40px = header padding-left; top: 22px = header padding-top.
-    // With transform-origin: top left the brand anchors from its top-left corner.
-    FINAL_LEFT = 40;
-    FINAL_TOP  = 22;
+    if (window.innerWidth < 600) {
+      // Mobile stacked: center brand (logo + flowers) horizontally in the header
+      FINAL_LEFT = (window.innerWidth - brand.offsetWidth * FINAL_SCALE) / 2;
+      FINAL_TOP  = 14; // matches reduced mobile header padding-top
+    } else {
+      // Desktop: top-left corner, matching header padding
+      FINAL_LEFT = 40;
+      FINAL_TOP  = 22;
+    }
   }
 
   function applyBrand(progress) {
@@ -560,23 +548,18 @@
     }
   }
 
-  // Only run the scroll animation on desktop (≥ 768px)
-  if (!isMobile) {
-    window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-    window.addEventListener('resize', function() {
-      if (window.innerWidth >= 768) {
-        locked = false;
-        measureAll();
-        onScroll();
-      }
-    });
+  window.addEventListener('resize', function() {
+    locked = false;
+    measureAll();
+    onScroll();
+  });
 
-    document.fonts.ready.then(function() {
-      measureAll();
-      onScroll();
-    });
-  }
+  document.fonts.ready.then(function() {
+    measureAll();
+    onScroll();
+  });
 
   // ── Home content — fetch from CMS and populate the page ─────────────────
   async function loadHomeContent() {
