@@ -534,7 +534,8 @@
         siteFloor = (window.getComputedStyle(bannerEl).display !== 'none')
           ? bannerEl.offsetTop
           : siteEl.offsetTop;
-        console.log('[Skystar scroll floor] nextPopupBanner.offsetTop:', bannerEl.offsetTop, '| siteFloor:', siteFloor);
+        console.log('[Skystar] nextPopupBanner.offsetTop:', bannerEl.offsetTop);
+        console.log('[Skystar] siteFloor (scroll lock minimum):', siteFloor, '— difference:', siteFloor - bannerEl.offsetTop);
         locked = true;
       }
     }
